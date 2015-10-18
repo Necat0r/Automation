@@ -1,0 +1,10 @@
+﻿<div class="sceneHeader">Scenes</div>
+<ul>
+    <li class="hoverable" data-ng-repeat="scene in scenes">
+        <div class="sceneListItem" style="line-height:normal; position:relative" data-ng-click="setScene(scene)">
+            <img src="img/cinema_mode.png" width="600px"/>
+            <div class="sceneName" style="position:absolute; font-size:150%; bottom: 0px; left: 0px" >{{scene.DisplayName}}</div>
+        </div>
+        <hr />
+    </li>
+</ul>

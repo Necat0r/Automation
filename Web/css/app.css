@@ -1,0 +1,173 @@
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100;
+  src: local('Roboto Thin'), local('Roboto-Thin'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/vzIUHo9z-oJ4WgkpPOtg1_esZW2xOQ-xsNqO47m55DA.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Roboto Light'), local('Roboto-Light'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/Hgo13k-tfSpn0qi1SFdUfT8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto Regular'), local('Roboto-Regular'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/2UX7WLTfW3W8TclTUvlFyQ.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Roboto Medium'), local('Roboto-Medium'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/RxZJdnzeo3R5zSexge8UUT8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Roboto Italic'), local('Roboto-Italic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/1pO9eUAp8pSF8VnRTP3xnvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 500;
+  src: local('Roboto Medium Italic'), local('Roboto-MediumItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/OLffGBTaF0XFOW1gnuHF0YbN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    color: white;
+    /*font: 14px/19px Roboto, sans-serif;*/
+    font: 14px Roboto, sans-serif;
+    font-weight: 400;
+    background-color: black;
+    height: 100%
+}
+
+img.deviceImage {
+    vertical-align:middle;
+    /*height: 40px*/
+    height: 32px;
+    margin-right: 5px;
+    margin-left: 5px;
+    background-color: white;
+}
+
+ul {
+    list-style-type: none;
+    padding:0;
+}
+
+li.hoverable {
+	transition: background-color .2s ease-out 0s;
+	-webkit-transition: background-color .2s ease-out 0s;
+    line-height: 50px;
+	/*display: inline-block;*/
+}
+
+ul li a {
+    display: block;
+    color:white;
+    text-decoration:none;
+}
+
+.hoverable:hover {
+    background-color: #ff6a00
+}
+
+hr {
+    border-color:#404040;
+    margin:0px
+}
+
+div {}
+
+/*List styles*/
+.deviceListHeader {
+    font-weight:bold;
+    color:darkgrey;
+    font-size:11px;
+}
+
+.deviceListName {
+    display: inline-block;
+    vertical-align:middle;
+    font-size: 200%;
+}
+
+.deviceStatus {
+    display: inline-block;
+    vertical-align:middle;
+    float:right;
+    font-size:100%;
+    margin-right: 5px;
+}
+
+/*Details styles*/
+.detailsContent {
+    top: 45px;
+    bottom: 0;
+    position:absolute;
+    width: 100%;
+}
+
+.deviceDetailsType {
+    font-weight:bold;
+    color:darkgrey;
+    font-size:11px;
+}
+
+.deviceDetailsName {
+    display: inline-block;
+    vertical-align:middle;
+    font-size: 200%;
+}
+
+.sceneHeader {
+    font-size: 300%;
+    text-align:center;
+    width:100%;
+}
+
+.sceneName {
+    /*float:left;*/
+    /*vertical-align:bottom;*/
+
+}
+
+
+button {
+    width: 100%;
+    height: 50px;
+
+	/*transition: background-color .1s ease-out 0s;
+	-webkit-transition: background-color .1s ease-out 0s;*/
+    /*line-height: 50px;*/
+	/*display: inline-block;*/
+}
+
+button:active {
+    background-color: #ff6a00;
+}
+
+input[type="range"] {
+    position: absolute;
+    -webkit-transform: rotate(90deg);
+    top:100px;
+    /*width: 200px;*/
+    /*height: 100%;*/
+    /*min: 0;
+    max: 1;*/
+}

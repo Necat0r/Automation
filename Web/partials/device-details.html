@@ -1,0 +1,149 @@
+﻿<div id="lampScreen" style="height: 45px;">
+    <div class="deviceDetailsType" style="float: left;">{{device.Archetype.toUpperCase()}}</div>
+    <center><span class="deviceDetailsName">{{device.DisplayName}}</span></center>
+</div>
+
+<div style="top: 45px; bottom: 0px">
+
+    <!-- Lamp controls -->
+    <div class="detailsContent" data-ng-if="device.Archetype == 'lamp'">
+        <div data-ng-if="device.Dimmable == false" style="float: left; width: 100%; height: 100%">
+            <button data-ng-click="changeLampValue(true)" style="height: 49%; margin-bottom: 5px;">On</button>
+            <br />
+            <button data-ng-click="changeLampValue(false)" style="height: 49%; margin-bottom: 5px;">Off</button>
+        </div>
+        <div data-ng-if="device.Dimmable == true" style="float: left; margin: 0; width: 100%; height: 100%">
+            <table style="width:inherit; height:inherit">
+                <tr>
+                    <td style="text-align:center">Dimmed to {{device.Level*100.0}} %</td>
+                </tr>
+                <tr>
+                    <td style="height:100%">
+                        <button data-ng-click="changeLampLevel(1.0)" style="height: 20%; margin-bottom: 5px;">100%</button>
+                        <button data-ng-click="changeLampLevel(0.75)" style="height: 20%; margin-bottom: 5px;">75%</button>
+                        <button data-ng-click="changeLampLevel(0.5)" style="height: 20%; margin-bottom: 5px;">50%</button>
+                        <button data-ng-click="changeLampLevel(0.25)" style="height: 20%; margin-bottom: 5px;">25%</button>
+                        <button data-ng-click="changeLampLevel(0.0)" style="height: 20%; margin-bottom: 5px;">0%</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!--Curtain controls-->
+    <div class="detailsContent" data-ng-if="device.Archetype == 'curtain'">
+        <button style="height: 32%; margin-bottom: 5px;" data-ng-click="curtain.up()">Up</button>
+        <br />
+        <button style="height: 32%; margin-bottom: 5px;" data-ng-click="curtain.stop()">Stop</button>
+        <br />
+        <button style="height: 32%; margin-bottom: 5px;" data-ng-click="curtain.down()">Down</button>
+    </div>
+
+    <!--Receiver controls-->
+    <div class="detailsContent" data-ng-if="device.Archetype == 'receiver'">
+        <button data-ng-click="receiver.switchPower()">Power On/Off</button>
+        <button data-ng-click="receiver.incVolume()">Vol+</button>
+        <button data-ng-click="receiver.decVolume()">Vol-</button>
+        <button data-ng-click="receiver.mute()">Mute</button>
+        <div data-ng-repeat="input in device.Inputs">
+            <button data-ng-click="receiver.input(input.Name)">Input: {{input.DisplayName}}</button>
+        </div>
+
+        Address: {{device.Address}}
+        <br />
+        Power: {{device.Power}}
+        <br />
+        Mute: {{device.Mute}}
+        <br />
+        Volume: {{device.Volume/10}} dB<br />
+        Input: {{receiver.currentInput().DisplayName}}<br />
+    </div>
+
+    <!--Projector controls-->
+    <div class="detailsContent" data-ng-if="device.Archetype == 'projector'">
+        <button data-ng-click="projector.switchPower()">Power On/Off</button>
+        Power: {{device.Power}}
+        <br />
+        WarmingUp: {{device.WarmingUp}}
+        <br />
+        Source: {{ device.Source}}
+        <br />
+        Lamp hours: {{device.LampHours}}
+    </div>
+
+    <!--Desktop controls-->
+    <div class="detailsContent" data-ng-if="device.Archetype == 'desktop'">
+        <button data-ng-click="desktop.switchPower()">Power On/Off</button>
+        <button data-ng-click="desktop.switchMonitor()">Monitor On/Off</button>
+        Address: {{device.Address}}
+        <br />
+        Mac address: {{device.MacAddress}}
+        <br />
+        Power: {{device.Power}}
+        <br />
+        MonitorPower: {{ device.MonitorPower}}
+        <br />
+    </div>
+
+
+    <!--Dummy device-->
+    <div class="detailsContent" data-ng-if="device.Archetype == 'dummy'">
+        <div id="log" style="position: absolute; right: 0; top: 0; z-index: 2147483647; background: rgba(128,128,128, 0.5); border: dashed"></div>
+
+        <script type="text/javascript">
+            var log = function (message) {
+                console.log(message);
+                var element = document.getElementById('log');
+                element.innerHTML = message + '<br />' + element.innerHTML;
+            }
+
+            var recognizer = new webkitSpeechRecognition();
+            //        recognizer.continuous = true;
+            recognizer.continuous = false;
+            //recognizer.interimResults = true;
+            //recognizer.lang = 'sv-SE';
+            recognizer.lang = 'en-US';
+            //recognizer.lang = 'en-GB';
+
+            recognizer.onresult = function (e) {
+                if (e.results.length) {
+                    var lastResultIdx = e.resultIndex;
+                    var result = e.results[lastResultIdx]
+                    var transcript = result[0].transcript;
+                    var confidence = parseFloat(result[0].confidence);
+
+                    log('Result: ' + transcript + ', confidence: ' + confidence)
+                    var scope = angular.element(document.getElementById('view')).scope();
+
+                    scope.speech.recognize(transcript);
+                }
+            };
+
+            recognizer.onend = function () {
+                log('Recognize ended.');
+                var btn = document.getElementById('rec');
+                btn.disabled = false;
+            };
+
+            recognizer.onerror = function (event) {
+                log('Recognizer error: ' + event.error + ', message: ' + event.message);
+                if (event.error == 'network') {
+                    recognizer.start();
+                    return;
+                }
+                recognizer.onend = null;
+                var btn = document.getElementById('rec');
+                btn.disabled = false;
+            }
+
+            var startRecognize = function () {
+                var btn = document.getElementById('rec');
+                btn.disabled = true;
+                recognizer.start();
+            }
+        </script>
+
+        <button id="rec" onclick="startRecognize()">Start recognize</button>
+    </div>
+
+</div>

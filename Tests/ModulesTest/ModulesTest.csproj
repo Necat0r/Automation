@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4C7218B3-6BA8-427C-A130-8C1EFE3287EA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ModulesTest</RootNamespace>
+    <AssemblyName>ModulesTest</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="ArduinoLampsTest.cs" />
+    <Compile Include="DummyTest.cs" />
+    <Compile Include="EventTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ModuleBase\ModuleBase.csproj">
+      <Project>{84d44835-8ff1-4a09-a56f-c979313abddb}</Project>
+      <Name>ModuleBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\ArduinoLamps\ArduinoLamps.csproj">
+      <Project>{cc0faeee-ad7b-4bd4-a9c5-70ad71c6ac16}</Project>
+      <Name>ArduinoLamps</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Bluetooth\Bluetooth.csproj">
+      <Project>{58f49703-44f1-44f4-9d51-c7a740d413d9}</Project>
+      <Name>Bluetooth</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\ComputerProxy\ComputerProxy.csproj">
+      <Project>{6615d6f1-6013-4897-963b-8e798dae0db7}</Project>
+      <Name>ComputerProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Curtain\Curtain.csproj">
+      <Project>{25ebdc42-63f0-4ea7-b3fa-d048d7464187}</Project>
+      <Name>Curtain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Dummy\Dummy.csproj">
+      <Project>{ac774ea8-db66-4fc4-a62e-5e46f7d11eff}</Project>
+      <Name>Dummy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Epson\Epson.csproj">
+      <Project>{f1f52fcd-92fa-4850-b1b3-4fbd1644c7bf}</Project>
+      <Name>Epson</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Events\Events.csproj">
+      <Project>{0a18d7d3-d05c-4871-b2df-e618acb25e31}</Project>
+      <Name>Events</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Mode\Mode.csproj">
+      <Project>{c6d037d6-d177-4816-96f4-921dc4fc9b8d}</Project>
+      <Name>Mode</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\PowerControl\PowerControl.csproj">
+      <Project>{5d60210d-8fff-4657-9de1-92e99ed65853}</Project>
+      <Name>PowerControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\RfxCom\RfxCom.csproj">
+      <Project>{c71528f7-1b11-4c4d-bdca-b479469e899e}</Project>
+      <Name>RfxCom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Scene\Scene.csproj">
+      <Project>{d01e0017-08f5-4746-a7fa-55233b1ab072}</Project>
+      <Name>Scene</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Speech\Speech.csproj">
+      <Project>{2d2b2850-f71a-486b-92db-dcfd618b2762}</Project>
+      <Name>Speech</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\WakeOnLan\WakeOnLan.csproj">
+      <Project>{397abe3e-d249-4e96-8be1-de53bc1fb7d2}</Project>
+      <Name>WakeOnLan</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Yamaha\Yamaha.csproj">
+      <Project>{4e18c5de-3f77-402e-9b99-532aa86397ca}</Project>
+      <Name>Yamaha</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModuleBaseTest\ModuleBaseTest.csproj">
+      <Project>{5ed5d4d7-9099-4cf9-88cd-d19d870fc741}</Project>
+      <Name>ModuleBaseTest</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

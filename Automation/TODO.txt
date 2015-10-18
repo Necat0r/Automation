@@ -1,0 +1,13 @@
+﻿
+[ ] Computer proxy - Read back monitor & power states upon running request instead of predicting.
+
+[ ] Macro/scene/mode support/cleanup
+	[ ] List in settings
+	[ ] Macro service
+	[ ] Macro web page
+
+[ ] DLL loader. Even feasable to do?
+
+Web interface
+[ ] Retain page scroll when switching to and from a device
+[ ] Web page change detection to trigger automagic refresh
