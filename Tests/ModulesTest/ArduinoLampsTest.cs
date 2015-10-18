@@ -63,6 +63,7 @@ namespace ModulesTest
         }
 
         [TestMethod]
+        [ExpectedException(typeof(TargetInvocationException))]
         public void ArduinoLamps_TestMissingService()
         {
             var util = new TestUtil();
@@ -73,10 +74,8 @@ namespace ModulesTest
             catch (TargetInvocationException e)
             {
                 Assert.AreEqual(typeof(InvalidOperationException), e.InnerException.GetType());
-                return;
+                throw;
             }
-
-            Assert.Fail();
         }
 
         [TestMethod]

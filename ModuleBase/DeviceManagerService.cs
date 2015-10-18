@@ -84,12 +84,12 @@ device/status/<deviceName>
             return devices;
         }
 
-        [ServiceGetContractAttribute("status/{device}")]
-        public object OnGetDeviceStatus(dynamic parameters)
+        [ServiceGetContractAttribute("status/{deviceName}")]
+        public object OnGetDeviceStatus(string deviceName)
         {
-            DeviceBase device = mDeviceManager.GetDevice(parameters.device);
+            DeviceBase device = mDeviceManager.GetDevice(deviceName);
             if (device == null)
-                throw new ServiceBase.RequestException(string.Format("Unknown device: {0}", parameters.device));
+                throw new ServiceBase.RequestException(string.Format("Unknown device: {0}", deviceName));
 
             lock (device)
             {
@@ -97,12 +97,12 @@ device/status/<deviceName>
             }
         }
 
-        [ServicePutContract("status/{device}")]
-        public object OnUpdateDeviceStatus(dynamic parameters, dynamic body)
+        [ServicePutContract("status/{deviceName}")]
+        public object OnUpdateDeviceStatus(string deviceName, dynamic body)
         {
-            DeviceBase device = mDeviceManager.GetDevice(parameters.device);
+            DeviceBase device = mDeviceManager.GetDevice(deviceName);
             if (device == null)
-                throw new ServiceBase.RequestException(string.Format("Unknown device: {0}", parameters.device));
+                throw new ServiceBase.RequestException(string.Format("Unknown device: {0}", deviceName));
 
             DeviceBase.DeviceState state = device.CopyState();
             foreach (var property in state.GetType().GetProperties())

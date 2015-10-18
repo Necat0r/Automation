@@ -6,6 +6,7 @@ using Nancy;
 
 namespace WebEndpoint
 {
+    /*
     public class DynamicModelBinder : IModelBinder
     {
         public object Bind(NancyContext context, Type modelType, object instance, BindingConfig configuration, params string[] blackList)
@@ -60,4 +61,5 @@ namespace WebEndpoint
             return modelType == typeof(DynamicDictionary);
         }
     }
+     */
 }

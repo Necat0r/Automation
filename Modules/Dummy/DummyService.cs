@@ -37,8 +37,8 @@ namespace Dummy
             throw new Exception("We're toast!");
         }
 
-        [ServiceGetContract("/{capture}")]
-        public dynamic OnRequest5(dynamic parameters)
+        [ServiceGetContract("{capture}")]
+        public dynamic OnRequest5(int capture)
         {
             return "Foo";
         }

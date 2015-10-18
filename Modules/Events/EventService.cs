@@ -26,7 +26,7 @@ namespace Events
         //}
 
         [ServicePutContract()]
-        public void OnEventRequest(IDictionary<string, string> parameters, Event externalEvent)
+        public void OnEventRequest(Event externalEvent)
         {
 
         }

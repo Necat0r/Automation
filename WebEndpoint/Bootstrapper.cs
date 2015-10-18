@@ -2,7 +2,6 @@
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Conventions;
-using Nancy.Serialization.JsonNet;
 using Nancy.TinyIoc;
 using System;
 using System.Collections.Generic;
@@ -27,6 +26,8 @@ namespace WebEndpoint
 
         protected override void ApplicationStartup(TinyIoCContainer container, Nancy.Bootstrapper.IPipelines pipelines)
         {
+            base.ApplicationStartup(container, pipelines);
+
             this.Conventions.ViewLocationConventions.Insert(0, (viewName, model, context) =>
             {
                 return string.Concat("Web/", viewName);
@@ -57,13 +58,13 @@ namespace WebEndpoint
             );
         }
 
-        protected override IEnumerable<Type> BodyDeserializers
-        {
-            get
-            {
-                yield return typeof(JsonNetBodyDeserializer);
-            }
-        }
+        //protected override IEnumerable<Type> BodyDeserializers
+        //{
+        //    get
+        //    {
+        //        yield return typeof(Nancy.Serialization.JsonNet.JsonNetBodyDeserializer /* JsonNetBodyDeserializer */ );
+        //    }
+        //}
 
         public class CustomRootPathProvider : IRootPathProvider
         {

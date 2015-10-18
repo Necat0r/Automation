@@ -58,6 +58,8 @@ namespace ModuleBaseTest
             Assert.AreEqual(obj.StringProperty, mapped.StringProperty);
             Assert.AreEqual(obj.EnumProperty, mapped.EnumProperty);
             Assert.AreEqual(obj.ObjectProperty, mapped.ObjectProperty);
+
+            Assert.AreEqual(0, mapped.GetDummy());
         }
 
         [TestMethod]

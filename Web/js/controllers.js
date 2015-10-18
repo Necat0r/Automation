@@ -35,8 +35,8 @@ automationControllers.controller('deviceListController', ['$scope', '$rootScope'
         };
     }]);
 
-automationControllers.controller('deviceDetailsController', ['$scope', '$routeParams', 'deviceService', 'speechService',
-    function ($scope, $routeParams, deviceService, speechService) {
+automationControllers.controller('deviceDetailsController', ['$scope', '$routeParams', 'deviceService', 'speechService', 'eventService',
+    function ($scope, $routeParams, deviceService, speechService, eventService) {
 
         deviceService.getDevice(parseInt($routeParams.deviceId)).then(function (device) {
             $scope.device = device;
@@ -194,6 +194,13 @@ automationControllers.controller('deviceDetailsController', ['$scope', '$routePa
                 speechService.recognize(text);
             }
         };
+
+        $scope.events = {
+            sendEvent: function (name, data) {
+                console.log("Sending event. " + name);
+                eventService.sendEvent(name, data);
+            }
+        };
     }]);
 
 automationControllers.controller('sceneController', ['$scope', '$http',
@@ -227,14 +234,5 @@ automationControllers.controller('sceneController', ['$scope', '$http',
                     'Content-Type': 'application/json',
                 }
             })
-        };
-    }]);
-
-automationControllers.controller('speechController', ['$scope', 'speechService',
-    function ($scope, speechService) {
-
-        $scope.speak = function (message) {
-            controle.log("Speaking: " + message);
-            speechService.speak(message);
         };
     }]);

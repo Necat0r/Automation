@@ -5,6 +5,8 @@ using System.Text;
 using System.Dynamic;
 using System.Reflection;
 using System.Linq;
+using System.Collections.Generic;
+using Nancy.ModelBinding;
 
 namespace WebEndpoint
 {
@@ -32,39 +34,16 @@ namespace WebEndpoint
                     continue;
 
                 bool isPut = contract is ServiceBase.ServicePutContractAttribute;
-                string uri = "/" + service.Name + "/" + contract.uri;
 
-                // Validate parameters. Every second element will be a parameter while the rest is just static uri content
-                char[] delimeters = { '{', '}' };
-                string[] words = uri.Split(delimeters);
-
-                for (int i = 1; i < words.Length; i += 2)
-                {
-
-                    
-                }
-
-
-                      
-                // Make sure there's only a single in-parameters at most
-                var paramCount = method.GetParameters().Length;
-                if (paramCount > 2)
-                    throw new ArgumentException(string.Format("Invalid number or parameters for contract method: {0}::{1}", service.GetType().Name, method.Name));
-
-                // TODO - Check that types match!
-                var isDynamic = false;
-                if (paramCount == 2)
-                {
-                    var bodyType = method.GetParameters()[1].GetType();
-                    isDynamic = bodyType.IsSubclassOf(typeof(DynamicObject));
-                }
-
-
-                // Map parameters to binding.
+                var mapper = new ContractMapper("/" + service.Name + "/" + contract.uri, method);
+                string uri = mapper.GetMappedUri();
 
                 Func<dynamic, dynamic> lambda = parameters =>
                 {
-                    //DynamicDictionary parameters = this.Bind<DynamicDictionary>();
+                    var arguments = new List<object>();
+
+                    mapper.MapArguments(parameters, arguments);
+
                     Nancy.DynamicDictionary body = null;
 
                     // Attempt to deserialize body from Json
@@ -90,19 +69,40 @@ namespace WebEndpoint
                             return null;
                         }
                     }
-                            
+
+                    if (mapper.BindBody && mapper.DynamicBody)
+                        arguments.Add(body);
+                    else if (mapper.BindBody)
+                    {
+                        //var dynMapper = new DynamicMapper();
+                        //var bar = DynamicMapper.Map<Event>(body);
+
+                        // Do binding magic.
+                        //var binder = new DynamicModelBinder();
+
+                        var e = new Event();
+                        var config = new BindingConfig();
+                        config.BodyOnly = true;
+                        config.IgnoreErrors = false;
+                        var e2 = this.Bind<Event>(config);
+                        var bar = this.BindTo<Event>(e);
+
+                        // The Bind<> method exists on the ModuleExtension rather than the NancyModule.
+                        var extensionMethods = typeof(ModuleExtensions).GetMethods();
+                        var methodList = new List<MethodInfo>(extensionMethods);
+
+                        // Get correct generic bind method
+                        var bindMethod = methodList.Find( x => x.Name == "Bind" && x.GetParameters().Length == 1 && x.IsGenericMethod == true);
+                        var genericMethod = bindMethod.MakeGenericMethod(mapper.BodyType);
+
+                        // Bind our object.
+                        var boundBody = genericMethod.Invoke(null, new object[] {this});
+                        arguments.Add(boundBody);
+                    }
+                           
                     try
                     {
-                        object[] arguments;
-
-                        if (method.GetParameters().Length == 2)
-                            arguments = new object[] { parameters, body };
-                        else if (method.GetParameters().Length == 1)
-                            arguments = new object[] { parameters };
-                        else
-                            arguments = new object[] { };
-
-                        object result = method.Invoke(service, arguments);
+                        object result = method.Invoke(service, arguments.ToArray());
 
                         return Response.AsJson(result);
                     }
@@ -133,5 +133,13 @@ namespace WebEndpoint
                 }
             }
         }
+
+        [Serializable]
+        public class Event
+        {
+            public string Name { get; set; }
+            public string Data { get; set; }
+        };
+
     }
 }

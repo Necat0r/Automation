@@ -130,3 +130,20 @@ automationServices.factory('speechService', ['$rootScope', '$timeout', '$http', 
     return speechService;
 
 }]);
+
+automationServices.factory('eventService', ['$rootScope', '$timeout', '$http', '$q', function ($rootScope, $timeout, $http, $q) {
+    var eventService = {};
+
+    eventService.sendEvent = function (name, data) {
+        $http({
+            method: 'PUT',
+            url: '/events',
+            data: { Name: name, Data: data },
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+    }
+
+    return eventService;
+}]);
