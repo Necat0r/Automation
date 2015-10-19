@@ -7,7 +7,7 @@
         <li class="hoverable" data-ng-repeat="i in category.devices">
             <a href="#/device/{{i}}">
                 <img class="deviceImage" src="img/success.png" ng-click="document.location.href='#/device/{{i}}'"/>
-                <span class="deviceListName">{{ devices[i].DisplayName }}</span>
+                <span class="deviceListName">{{ devices[i].displayName }}</span>
                 <span class="deviceStatus">{{ getStatus(devices[i]) }}</span>
             </a>
             <hr />

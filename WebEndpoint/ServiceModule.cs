@@ -44,62 +44,60 @@ namespace WebEndpoint
 
                     mapper.MapArguments(parameters, arguments);
 
-                    Nancy.DynamicDictionary body = null;
-
-                    // Attempt to deserialize body from Json
-                    if (Request.Body.Length > 0)
+                    if (mapper.BindBody && mapper.DynamicBody)
                     {
-                        var buffer = new byte[Request.Body.Length];
-                        Request.Body.Position = 0;
-                        Request.Body.Read(buffer, 0, (int)Request.Body.Length);
-                        string bodyStr = Encoding.Default.GetString(buffer);
-                        Console.WriteLine("Got body data:\n{0}", bodyStr);
+                        // Bind manually for now until I've fixed the dynamic type.
 
-                        var serializer = new Nancy.Json.JavaScriptSerializer();
-                        try
+                        // Attempt to deserialize body from Json
+
+                        Nancy.DynamicDictionary body = null;
+                        if (Request.Body.Length > 0)
                         {
-                            var bodyJson = serializer.DeserializeObject(bodyStr) as System.Collections.Generic.Dictionary<string, object>;
-                            if (bodyJson != null)
-                                body = Nancy.DynamicDictionary.Create(bodyJson);
+                            var buffer = new byte[Request.Body.Length];
+                            Request.Body.Position = 0;
+                            Request.Body.Read(buffer, 0, (int)Request.Body.Length);
+                            string bodyStr = Encoding.Default.GetString(buffer);
+                            Console.WriteLine("Got body data:\n{0}", bodyStr);
+
+                            var serializer = new Nancy.Json.JavaScriptSerializer();
+                            try
+                            {
+                                var bodyJson = serializer.DeserializeObject(bodyStr) as System.Collections.Generic.Dictionary<string, object>;
+                                if (bodyJson != null)
+                                    body = Nancy.DynamicDictionary.Create(bodyJson);
+                            }
+                            catch (System.ArgumentException)
+                            {
+                                // Just eat it.
+                                Console.WriteLine("Got request with invalid json body for url: " + Request.Url);
+                                return null;
+                            }
                         }
-                        catch (System.ArgumentException)
-                        {
-                            // Just eat it.
-                            Console.WriteLine("Got request with invalid json body for url: " + Request.Url);
-                            return null;
-                        }
+
+                        arguments.Add(body);
                     }
 
-                    if (mapper.BindBody && mapper.DynamicBody)
-                        arguments.Add(body);
                     else if (mapper.BindBody)
                     {
-                        //var dynMapper = new DynamicMapper();
-                        //var bar = DynamicMapper.Map<Event>(body);
+                        // Bind specific type.
 
-                        // Do binding magic.
-                        //var binder = new DynamicModelBinder();
-
-                        var e = new Event();
                         var config = new BindingConfig();
                         config.BodyOnly = true;
                         config.IgnoreErrors = false;
-                        var e2 = this.Bind<Event>(config);
-                        var bar = this.BindTo<Event>(e);
 
                         // The Bind<> method exists on the ModuleExtension rather than the NancyModule.
                         var extensionMethods = typeof(ModuleExtensions).GetMethods();
                         var methodList = new List<MethodInfo>(extensionMethods);
 
                         // Get correct generic bind method
-                        var bindMethod = methodList.Find( x => x.Name == "Bind" && x.GetParameters().Length == 1 && x.IsGenericMethod == true);
+                        var bindMethod = methodList.Find(x => x.Name == "Bind" && x.GetParameters().Length == 1 && x.IsGenericMethod == true);
                         var genericMethod = bindMethod.MakeGenericMethod(mapper.BodyType);
 
                         // Bind our object.
-                        var boundBody = genericMethod.Invoke(null, new object[] {this});
+                        var boundBody = genericMethod.Invoke(null, new object[] { this });
                         arguments.Add(boundBody);
                     }
-                           
+
                     try
                     {
                         object result = method.Invoke(service, arguments.ToArray());
@@ -133,13 +131,5 @@ namespace WebEndpoint
                 }
             }
         }
-
-        [Serializable]
-        public class Event
-        {
-            public string Name { get; set; }
-            public string Data { get; set; }
-        };
-
     }
 }

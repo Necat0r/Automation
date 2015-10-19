@@ -22,14 +22,14 @@ automationServices.factory('deviceService', ['$rootScope', '$timeout', '$http', 
                     data[i]['index'] = i;
 
                     // Only include decies with proper display names
-                    if (data[i].DisplayName == null)
+                    if (data[i].displayName == null)
                         continue;
 
-                    if (data[i].Archetype == null)
+                    if (data[i].archetype == null)
                         other.push(i);
-                    else if (data[i].Archetype == "lamp")
+                    else if (data[i].archetype == "lamp")
                         lamps.push(i);
-                    else if (data[i].Archetype == "curtain")
+                    else if (data[i].archetype == "curtain")
                         curtains.push(i);
                     else
                         other.push(i);
@@ -84,13 +84,9 @@ automationServices.factory('deviceService', ['$rootScope', '$timeout', '$http', 
         changeDevice: function (device) {
             var index = device.index;
 
-            //var promise = $http.put('http://192.168.0.50/device/status/' + device.Name, device)
-
-            //url: 'http://192.168.0.50/device/status/' + device.Name,
-
             var promise = $http({
                 method: 'PUT',
-                url: '/device/status/' + device.Name,
+                url: '/device/status/' + device.name,
                 data: device,
                 headers: {
                     'Content-Type': 'application/json',

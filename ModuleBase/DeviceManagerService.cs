@@ -115,23 +115,23 @@ device/status/<deviceName>
                     continue;
 
                 Type type = property.PropertyType;
-                string value = body[property.Name];
+                var value = body[property.Name];
 
                 if (type == typeof(System.Int32))
-                    property.SetValue(state, Int32.Parse(value));
+                    property.SetValue(state, Int32.Parse((string)value));
                 else if (type == typeof(string))
-                    property.SetValue(state, value);
+                    property.SetValue(state, (string)value);
                 else if (type == typeof(bool))
-                    property.SetValue(state, bool.Parse(value));
+                    property.SetValue(state, bool.Parse((string)value));
                 else if (type == typeof(float))
-                    property.SetValue(state, float.Parse(value));
+                    property.SetValue(state, float.Parse((string)value));
                 else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     // TODO - Add proper support for lists.
                 }
                 else if (type.IsEnum)
                 {
-                    var intValue = Int32.Parse(value);
+                    var intValue = Int32.Parse((string)value);
                     property.SetValue(state, Enum.ToObject(type, intValue));
                 }
                 else

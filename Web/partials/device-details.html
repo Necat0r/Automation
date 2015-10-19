@@ -1,21 +1,21 @@
 ﻿<div id="lampScreen" style="height: 45px;">
-    <div class="deviceDetailsType" style="float: left;">{{device.Archetype.toUpperCase()}}</div>
-    <center><span class="deviceDetailsName">{{device.DisplayName}}</span></center>
+    <div class="deviceDetailsType" style="float: left;">{{device.archetype.toUpperCase()}}</div>
+    <center><span class="deviceDetailsName">{{device.displayName}}</span></center>
 </div>
 
 <div style="top: 45px; bottom: 0px">
 
     <!-- Lamp controls -->
-    <div class="detailsContent" data-ng-if="device.Archetype == 'lamp'">
-        <div data-ng-if="device.Dimmable == false" style="float: left; width: 100%; height: 100%">
+    <div class="detailsContent" data-ng-if="device.archetype == 'lamp'">
+        <div data-ng-if="device.dimmable == false" style="float: left; width: 100%; height: 100%">
             <button data-ng-click="changeLampValue(true)" style="height: 49%; margin-bottom: 5px;">On</button>
             <br />
             <button data-ng-click="changeLampValue(false)" style="height: 49%; margin-bottom: 5px;">Off</button>
         </div>
-        <div data-ng-if="device.Dimmable == true" style="float: left; margin: 0; width: 100%; height: 100%">
+        <div data-ng-if="device.dimmable == true" style="float: left; margin: 0; width: 100%; height: 100%">
             <table style="width:inherit; height:inherit">
                 <tr>
-                    <td style="text-align:center">Dimmed to {{device.Level*100.0}} %</td>
+                    <td style="text-align:center">Dimmed to {{device.level*100.0}} %</td>
                 </tr>
                 <tr>
                     <td style="height:100%">
@@ -31,7 +31,7 @@
     </div>
 
     <!--Curtain controls-->
-    <div class="detailsContent" data-ng-if="device.Archetype == 'curtain'">
+    <div class="detailsContent" data-ng-if="device.archetype == 'curtain'">
         <button style="height: 32%; margin-bottom: 5px;" data-ng-click="curtain.up()">Up</button>
         <br />
         <button style="height: 32%; margin-bottom: 5px;" data-ng-click="curtain.stop()">Stop</button>
@@ -40,54 +40,54 @@
     </div>
 
     <!--Receiver controls-->
-    <div class="detailsContent" data-ng-if="device.Archetype == 'receiver'">
+    <div class="detailsContent" data-ng-if="device.archetype == 'receiver'">
         <button data-ng-click="receiver.switchPower()">Power On/Off</button>
         <button data-ng-click="receiver.incVolume()">Vol+</button>
         <button data-ng-click="receiver.decVolume()">Vol-</button>
         <button data-ng-click="receiver.mute()">Mute</button>
-        <div data-ng-repeat="input in device.Inputs">
-            <button data-ng-click="receiver.input(input.Name)">Input: {{input.DisplayName}}</button>
+        <div data-ng-repeat="input in device.inputs">
+            <button data-ng-click="receiver.input(input.name)">Input: {{input.displayName}}</button>
         </div>
 
-        Address: {{device.Address}}
+        Address: {{device.address}}
         <br />
-        Power: {{device.Power}}
+        Power: {{device.power}}
         <br />
-        Mute: {{device.Mute}}
+        Mute: {{device.mute}}
         <br />
-        Volume: {{device.Volume/10}} dB<br />
-        Input: {{receiver.currentInput().DisplayName}}<br />
+        Volume: {{device.volume/10}} dB<br />
+        Input: {{receiver.currentInput().displayName}}<br />
     </div>
 
     <!--Projector controls-->
-    <div class="detailsContent" data-ng-if="device.Archetype == 'projector'">
+    <div class="detailsContent" data-ng-if="device.archetype == 'projector'">
         <button data-ng-click="projector.switchPower()">Power On/Off</button>
-        Power: {{device.Power}}
+        Power: {{device.power}}
         <br />
-        WarmingUp: {{device.WarmingUp}}
+        WarmingUp: {{device.warmingUp}}
         <br />
-        Source: {{ device.Source}}
+        Source: {{ device.source}}
         <br />
-        Lamp hours: {{device.LampHours}}
+        Lamp hours: {{device.lampHours}}
     </div>
 
     <!--Desktop controls-->
-    <div class="detailsContent" data-ng-if="device.Archetype == 'desktop'">
+    <div class="detailsContent" data-ng-if="device.archetype == 'desktop'">
         <button data-ng-click="desktop.switchPower()">Power On/Off</button>
         <button data-ng-click="desktop.switchMonitor()">Monitor On/Off</button>
-        Address: {{device.Address}}
+        Address: {{device.address}}
         <br />
-        Mac address: {{device.MacAddress}}
+        Mac address: {{device.macAddress}}
         <br />
-        Power: {{device.Power}}
+        Power: {{device.power}}
         <br />
-        MonitorPower: {{ device.MonitorPower}}
+        MonitorPower: {{ device.monitorPower}}
         <br />
     </div>
 
 
     <!--Dummy device-->
-    <div class="detailsContent" data-ng-if="device.Archetype == 'dummy'">
+    <div class="detailsContent" data-ng-if="device.archetype == 'dummy'">
         <div id="log" style="position: absolute; right: 0; top: 0; z-index: 2147483647; background: rgba(128,128,128, 0.5); border: dashed"></div>
 
         <script type="text/javascript">

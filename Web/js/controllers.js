@@ -14,18 +14,18 @@ automationControllers.controller('deviceListController', ['$scope', '$rootScope'
         $scope.getStatus = function (device) {
             var status;
 
-            if (device.Archetype == null)
+            if (device.archetype == null)
                 return;
-            else if (device.Archetype == "lamp") {
-                if (device.Dimmable == true)
-                    status = String(device.Level * 100.0) + "%";
-                else if (device.Value == true)
+            else if (device.archetype == "lamp") {
+                if (device.dimmable == true)
+                    status = String(device.level * 100.0) + "%";
+                else if (device.value == true)
                     status = "On";
                 else
                     status = "Off";
             }
-            else if (device.Archetype == "curtain") {
-                if (device.Position == 0)
+            else if (device.archetype == "curtain") {
+                if (device.position == 0)
                     status = "Down";
                 else
                     status = "Up";
@@ -63,9 +63,9 @@ automationControllers.controller('deviceDetailsController', ['$scope', '$routePa
         }
 
         $scope.changeLampLevel = function (dimLevel) {
-            //if (dimLevel != $scope.device.Level) {
-                $scope.device.Value = (dimLevel > 0.0);
-                $scope.device.Level = dimLevel;
+            //if (dimLevel != $scope.device.level) {
+                $scope.device.value = (dimLevel > 0.0);
+                $scope.device.level = dimLevel;
 
                 deviceService.changeDevice($scope.device).then(function (device) {
                     console.log("New state");
@@ -76,12 +76,12 @@ automationControllers.controller('deviceDetailsController', ['$scope', '$routePa
         };
 
         $scope.changeLampValue = function (value) {
-            //if (value != $scope.device.Value) {
-                $scope.device.Value = value;
+            //if (value != $scope.device.value) {
+                $scope.device.value = value;
                 if (value)
-                    $scope.device.Level = 1.0;
+                    $scope.device.level = 1.0;
                 else
-                    $scope.device.Level = 0.0;
+                    $scope.device.level = 0.0;
 
                 console.log($scope.device);
                 deviceService.changeDevice($scope.device).then(function (device) {
@@ -94,17 +94,17 @@ automationControllers.controller('deviceDetailsController', ['$scope', '$routePa
 
         $scope.curtain = {
             down: function () {
-                $scope.device.Action = 0;
+                $scope.device.action = 0;
                 $scope.changeDevice($scope.device);
             },
 
             stop: function () {
-                $scope.device.Action = 1;
+                $scope.device.action = 1;
                 $scope.changeDevice($scope.device);
             },
 
             up: function () {
-                $scope.device.Action = 2;
+                $scope.device.action = 2;
                 $scope.changeDevice($scope.device);
             },
         };
@@ -113,9 +113,9 @@ automationControllers.controller('deviceDetailsController', ['$scope', '$routePa
             switchPower: function (value) {
                 if (value == undefined)
                     // Switch instead
-                    $scope.device.Power = !$scope.device.Power;
+                    $scope.device.power = !$scope.device.power;
                 else
-                    $scope.device.Power = value;
+                    $scope.device.power = value;
                 $scope.changeDevice($scope.device);
             },
         };
@@ -124,40 +124,40 @@ automationControllers.controller('deviceDetailsController', ['$scope', '$routePa
             switchPower: function (value) {
                 if (value == undefined)
                     // Toggle instead
-                    $scope.device.Power = !$scope.device.Power;
+                    $scope.device.power = !$scope.device.power;
                 else
-                    $scope.device.Power = value;
+                    $scope.device.power = value;
                 $scope.changeDevice($scope.device);
             },
 
             mute: function (value) {
                 if (value == undefined)
                     // Toggle instead
-                    $scope.device.Mute = !$scope.device.Mute;
+                    $scope.device.mute = !$scope.device.mute;
                 else
-                    $scope.device.Mute = value;
+                    $scope.device.mute = value;
                 $scope.changeDevice($scope.device);
             },
 
             incVolume: function () {
-                $scope.device.Volume += 50;
+                $scope.device.volume += 50;
                 $scope.changeDevice($scope.device);
             },
 
             decVolume: function () {
-                $scope.device.Volume -= 50;
+                $scope.device.volume -= 50;
                 $scope.changeDevice($scope.device);
             },
 
             input: function (value) {
-                $scope.device.Input = value;
+                $scope.device.input = value;
                 $scope.changeDevice($scope.device);
             },
 
             currentInput: function () {
-                for (var i in $scope.device.Inputs) {
-                    if ($scope.device.Inputs[i].Name === $scope.device.Input)
-                        return $scope.device.Inputs[i];
+                for (var i in $scope.device.inputs) {
+                    if ($scope.device.inputs[i].name === $scope.device.input)
+                        return $scope.device.inputs[i];
                 }
 
                 return { DisplayName: "<Unknown>"}
@@ -168,18 +168,18 @@ automationControllers.controller('deviceDetailsController', ['$scope', '$routePa
             switchPower: function (value) {
                 if (value == undefined)
                     // Toggle instead
-                    $scope.device.Power = !$scope.device.Power;
+                    $scope.device.power = !$scope.device.power;
                 else
-                    $scope.device.Power = value;
+                    $scope.device.power = value;
                 $scope.changeDevice($scope.device);
             },
 
             switchMonitor: function (value) {
                 if (value == undefined)
                     // Toggle instead
-                    $scope.device.MonitorPower = !$scope.device.MonitorPower;
+                    $scope.device.monitorPower = !$scope.device.monitorPower;
                 else
-                    $scope.device.MonitorPower = value;
+                    $scope.device.monitorPower = value;
                 $scope.changeDevice($scope.device);
             },
         };
@@ -228,7 +228,7 @@ automationControllers.controller('sceneController', ['$scope', '$http',
 
             var promise = $http({
                 method: 'PUT',
-                url: '/scene/' + scene.Name,
+                url: '/scene/' + scene.name,
                 data: scene,
                 headers: {
                     'Content-Type': 'application/json',
