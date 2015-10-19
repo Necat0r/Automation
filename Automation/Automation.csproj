@@ -299,9 +299,6 @@
     <Content Include="..\Web\js\controllers.js">
       <Link>Web\js\controllers.js</Link>
     </Content>
-    <Content Include="..\Web\js\levenshtein.js">
-      <Link>Web\js\levenshtein.js</Link>
-    </Content>
     <Content Include="..\Web\js\services.js">
       <Link>Web\js\services.js</Link>
     </Content>
