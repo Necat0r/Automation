@@ -178,6 +178,15 @@ namespace Automation
 
                 MessageBox.Show(message, "Exception");
 
+                Log.Fatal(message);
+                var inner = e.InnerException;
+                while (inner != null)
+                {
+                    string innerMessage = string.Format("Inner exception: {0}\n\nLocation: {1}\n\nCallstack:\n{2}\n\n", inner.Message, inner.TargetSite, inner.StackTrace);
+                    Console.WriteLine(innerMessage);
+                    inner = inner.InnerException;
+                }
+
                 throw;
             }
         }
