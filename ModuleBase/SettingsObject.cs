@@ -16,6 +16,18 @@ namespace ModuleBase
             return dictionary.TryGetValue(indexes[0].ToString(), out result);
         }
 
+        public object this[string key]
+        {
+            get
+            {
+                return dictionary[key];
+            }
+            set
+            {
+                dictionary[key] = value;
+            }
+        }
+
         public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
         {
             if (indexes.Length >= 1)

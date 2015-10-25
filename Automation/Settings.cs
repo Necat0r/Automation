@@ -49,14 +49,14 @@ namespace Automation
 
         public SettingsObject LoadSettingsObject(XmlNode node)
         {
-            dynamic settings = new SettingsObject();
+            var settings = new SettingsObject();
 
             // Copy in attributes
             foreach (XmlAttribute attribute in node.Attributes)
                 settings[attribute.Name.ToLower()] = attribute.Value;
 
             if (node.InnerText.Length > 0)
-                settings.value = node.InnerText;
+                settings["value"] = node.InnerText;
 
             bool hasChildren = node.ChildNodes.Count > 0 && node.FirstChild.GetType() != typeof(XmlText);
             if (!hasChildren)
