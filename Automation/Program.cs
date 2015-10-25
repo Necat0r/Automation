@@ -5,6 +5,7 @@ using Module;
 using Support;
 using System.IO;
 using System.Collections.Generic;
+using Logging;
 
 namespace Automation
 {
