@@ -103,7 +103,6 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="ContractMapper.cs" />
-    <Compile Include="DynamicModelBinder.cs" />
     <Compile Include="IndexModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
