@@ -13,10 +13,8 @@ namespace Scene
         }
 
         [ServicePutContract("{scene}")]
-        public void OnSceneRequest(dynamic parameters)
+        public void OnSceneRequest(string scene)
         {
-            string scene = parameters.scene;
-
             Console.WriteLine("Scene requested: " + scene);
             if (OnSceneEvent != null)
                 OnSceneEvent(this, new SceneEvent(scene));
