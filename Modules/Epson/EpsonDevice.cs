@@ -410,6 +410,9 @@ namespace Epson
             string key = null;
             string value = null;
 
+            if (mRunningCommand == null)
+                return;
+
             if (responseData != null)
             {
                 response = System.Text.Encoding.ASCII.GetString(responseData).Replace("\r", "");

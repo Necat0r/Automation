@@ -1,4 +1,6 @@
-﻿
+﻿[ ]	Clean up threading in EpsonDevice since mRunningCommand is not properly guarded when getting response data vs when running commands.
+	Should be possible to simplify the code quite a bit by caching off events etc for future processing rather than doing it directly.
+
 [ ] Computer proxy - Read back monitor & power states upon running request instead of predicting.
 
 [ ] Macro/scene/mode support/cleanup
