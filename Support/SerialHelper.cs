@@ -245,9 +245,6 @@ namespace Support
 
                 if (bytesRead > 0)
                 {
-                    Console.WriteLine("{0}: Read {1} bytes", mName, bytesRead);
-                    Console.WriteLine("Str: {0}", System.Text.Encoding.UTF8.GetString(data));
-
                     foreach (var listener in mListeners)
                         listener.OnData(data);
 
