@@ -30,6 +30,12 @@ automationControllers.controller('deviceListController', ['$scope', '$rootScope'
                 else
                     status = "Up";
             }
+            else if (device.archetype == "receiver") {
+                if (device.power == false)
+                    status = "Off";
+                else
+                    status = String(device.volume / 10) + "dB";
+            }
 
             return status;
         };
