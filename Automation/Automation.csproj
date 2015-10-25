@@ -315,7 +315,7 @@
     <Content Include="..\Web\partials\scene-list.html">
       <Link>Web\partials\scene-list.html</Link>
     </Content>
-    <Content Include="TODO.txt" />
+    <None Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="Automation.pdb">
