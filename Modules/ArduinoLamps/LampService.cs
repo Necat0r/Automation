@@ -1,7 +1,5 @@
 ﻿using Module;
 using Support;
-using System;
-using System.Diagnostics;
 
 namespace ArduinoLamps
 {
@@ -21,9 +19,6 @@ namespace ArduinoLamps
 
         public override void SetLevel(LampDevice lampDevice, float level)
         {
-            // level should already be clamped
-            Debug.Assert(level >= 0.0f && level <= 1.0f, "Level should already have been clamped!");
-
             byte byteLevel = (byte)(level * 255.0f);
 
             // size, payload[size]
