@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
+using System.Linq;
 
 namespace WebEndpoint
 {
@@ -25,13 +26,10 @@ namespace WebEndpoint
 
             mMethod = method;
 
-            // Validate parameters. Every second element will be a parameter while the rest is just static uri content
-
-            var parameters = new Dictionary<string, ParameterInfo>();
-            foreach (var param in method.GetParameters())
-                parameters.Add(param.Name, param);
-
+            var parameters = method.GetParameters().ToDictionary(key => key.Name, value => value);
             var uriParameters = mWords.Length / 2;
+
+            // Validate parameters. Every second element will be a parameter while the rest is just static uri content
 
             // Make sure the in-parameters match up except for the last body parameter
             if (uriParameters > parameters.Count)
@@ -46,11 +44,13 @@ namespace WebEndpoint
                 mBindBody = true;
                 var methodParams = method.GetParameters();
                 BodyType = methodParams[methodParams.Length - 1].ParameterType;
+
+                // Doesn't seem to be any better way to classify it as being of a dynamic type.
                 DynamicBody = BodyType == typeof(object);
             }
 
+            // Construct the URI.
             string mappedUri = "";
-
             for (int i = 0; i < mWords.Length; ++i)
             {
                 if (i % 2 == 0)
@@ -66,15 +66,16 @@ namespace WebEndpoint
                 if (!result)
                     throw new ArgumentException(string.Format("Parameter '{0}' does not correspond to a matching method parameter.", mWords[i]));
 
-                var typeMap = new Dictionary<Type, string> {
-                    { typeof(long), "long" },
-                    { typeof(int), "int" },
-                    { typeof(string), "string" },
-                    { typeof(bool), "bool" }
-                };
-
                 mappedUri += string.Format("{{{0}}}", mWords[i]);
 
+                // TODO - There seems to be a mismatching between the nancy documentation which allows you to specify type
+                // In practice it doesn't seem to work (or we're simply doing it wrong...
+                //var typeMap = new Dictionary<Type, string> {
+                //    { typeof(long), "long" },
+                //    { typeof(int), "int" },
+                //    { typeof(string), "string" },
+                //    { typeof(bool), "bool" }
+                //};
                 //mappedUri += string.Format("{{{0}:{1}}}", mWords[i], typeMap[info.ParameterType]);
             }
 
@@ -92,11 +93,6 @@ namespace WebEndpoint
             {
                 arguments.Add(parameters[mWords[i]].Value);
             }
-        }
-
-        public void Invoke(IDictionary<string, object> parameters, System.Collections.Generic.Dictionary<string, object> body)
-        {
-
         }
     }
 }
