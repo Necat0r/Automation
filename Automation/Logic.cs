@@ -13,6 +13,7 @@ using Module;
 using Scene;
 using System.Collections.Generic;
 using ArduinoLamps;
+using Events;
 
 namespace Automation
 {
@@ -91,6 +92,7 @@ namespace Automation
         private SceneService mScene;
         private WakeOnLanService mWake;
         private SpeechService mSpeech;
+        private EventService mEvents;
 
         // Livingroom devices
         private CurtainDevice mCurtainLivingroom;
@@ -137,6 +139,10 @@ namespace Automation
             mScene = (SceneService)serviceManager.GetService(typeof(SceneService));
             if (mScene != null)
                 mScene.OnSceneEvent += OnSceneEvent;
+
+            mEvents = (EventService)serviceManager.GetService(typeof(EventService));
+            if (mEvents != null)
+                mEvents.OnEvent += OnExternalEvent;
 
             // Livingroom
             mCurtainLivingroom = (CurtainDevice)deviceManager.GetDevice("curtain_livingroom");
@@ -556,12 +562,30 @@ namespace Automation
             RunMacro(e.Scene);
         }
 
+        private void OnExternalEvent(object sender, Events.EventService.Event externalEvent)
+        {
+            if (externalEvent.Name == "phoneInRange")
+            {
+                string id;
+                bool result = externalEvent.Data.TryGetValue("Id", out id);
+                if (result)
+                    HomeScene();
+            }
+        }
+
         private void HomeScene()
         {
-            Speak("Welcome home, Jonas");
-            TimeOfDay tod = GetTimeOfDay();
             if (mMode != null)
             {
+                var currentMode = mMode.CurrentMode;
+
+                bool isAway = currentMode == ModeService.Mode.Away || currentMode == ModeService.Mode.Off;
+                if (!isAway)
+                    return;
+
+                Speak("Welcome home, Jonas");
+
+                TimeOfDay tod = GetTimeOfDay();
                 if (tod != TimeOfDay.Night)
                     mMode.CurrentMode = ModeService.Mode.Normal;
                 //else
