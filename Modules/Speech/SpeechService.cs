@@ -207,51 +207,45 @@ namespace Speech
             public Callback Action;
         }
 
-        [ServicePutContract("speak")]
-        public void OnSpeakRequest(dynamic parameters)
+        [ServicePutContract("speak?{text}")]
+        public void OnSpeakRequest(string text)
         {
-            string text = parameters.text;
-            if (text != null)
-                Speak(text);
+            Speak(text);
         }
 
-        [ServicePutContract("recognize")]
-        public void OnRecognizeRequest(dynamic parameters)
+        [ServicePutContract("recognize?{text}")]
+        public void OnRecognizeRequest(string text)
         {
-            string text = parameters.text;
-            if (text != null)
+            Console.WriteLine("Trying to recognize: " + text);
+
+            // Try to find a high match with Levenchtein
+            float bestResult = 0.0f;
+            Module.DeviceBase.VoiceCommand bestCommand;
+
+            foreach (var command in mVoiceCommands)
             {
-                Console.WriteLine("Trying to recognize: " + text);
+                float result = Levenshtein(command.Key, text);
 
-                // Try to find a high match with Levenchtein
-                float bestResult = 0.0f;
-                Module.DeviceBase.VoiceCommand bestCommand;
-
-                foreach (var command in mVoiceCommands)
+                if (result > bestResult)
                 {
-                    float result = Levenshtein(command.Key, text);
-
-                    if (result > bestResult)
-                    {
-                        bestCommand = command.Value;
-                        bestResult = result;
-                    }
+                    bestCommand = command.Value;
+                    bestResult = result;
                 }
+            }
 
-                if (bestResult > 0.72)
-                {
-                    Console.WriteLine("Matched to: " + bestCommand.Command + ", confidence: " + bestResult);
+            if (bestResult > 0.72)
+            {
+                Console.WriteLine("Matched to: " + bestCommand.Command + ", confidence: " + bestResult);
 
-                    Speak("Ok");
+                Speak("Ok");
 
-                    // Exectue delgate
-                    bestCommand.Delegate();
-                }
-                else
-                {
-                    Console.WriteLine("No match for '" + text + "'. Highest was: " + bestCommand.Command + ", confidence: " + bestResult);
-                    Speak("I didn't get that");
-                }
+                // Exectue delgate
+                bestCommand.Delegate();
+            }
+            else
+            {
+                Console.WriteLine("No match for '" + text + "'. Highest was: " + bestCommand.Command + ", confidence: " + bestResult);
+                Speak("I didn't get that");
             }
         }
 
