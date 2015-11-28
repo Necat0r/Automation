@@ -42,7 +42,7 @@ namespace WebEndpoint
                 {
                     var arguments = new List<object>();
 
-                    mapper.MapArguments(parameters, arguments);
+                    mapper.MapArguments(parameters, Request.Query, arguments);
 
                     if (mapper.BindBody && mapper.DynamicBody)
                     {
