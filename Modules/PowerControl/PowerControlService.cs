@@ -17,14 +17,15 @@ namespace PowerControl
             : base("power", info)
         { }
 
-        [ServicePutContract("monitor")]
-        public object OnMonitorRequest(dynamic parameters)
+        [ServicePutContract("monitor?{value}")]
+        public object OnMonitorRequest(string value)
         {
-            if (bool.Parse(parameters.value))
+            // TODO - Shouldn't need to parse here.
+            if (bool.Parse(value))
                 NativeMethods.PostMessage(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, ON);
             else
                 NativeMethods.PostMessage(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, OFF);
-            return parameters.value;
+            return value;
         }
 
         [ServicePutContract("standby")]
