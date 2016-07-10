@@ -194,7 +194,7 @@ namespace Support
                         mSerial.Write(data, 0, data.Length);
                     }
                 }
-                catch (TimeoutException)
+                catch (Exception)
                 {
                     Console.WriteLine("{0}: Write timed out. Disconnecting", mName);
                     Disconnect();

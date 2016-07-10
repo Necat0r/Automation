@@ -171,28 +171,35 @@ namespace RfxComService
 
             while (mRunning)
             {
-                // Reset these first so we don't have the other thread set them after we've checked the data and end up
-                // sleeping through it
-                mSerialEvent.Reset();
-                mActionEvent.Reset();
-
-                if (mActionQueue.Count == 0 && mBuffer.IsEmpty)
+                try
                 {
-                    // Sleep until something happens.
-                    EventWaitHandle.WaitAny(mEvents);
+                    // Reset these first so we don't have the other thread set them after we've checked the data and end up
+                    // sleeping through it
+                    mSerialEvent.Reset();
+                    mActionEvent.Reset();
+
+                    if (mActionQueue.Count == 0 && mBuffer.IsEmpty)
+                    {
+                        // Sleep until something happens.
+                        EventWaitHandle.WaitAny(mEvents);
+                    }
+
+                    bool waiting = false;
+                    if (mActionQueue.Count > 0)
+                        ProcessActions(out waiting);
+
+                    if (!mBuffer.IsEmpty)
+                        ProcessData();
+
+                    if (waiting)
+                    {
+                        // Stay a while and listen.
+                        EventWaitHandle.WaitAny(mEvents, 100);
+                    }
                 }
-
-                bool waiting = false;
-                if (mActionQueue.Count > 0)
-                    ProcessActions(out waiting);
-
-                if (!mBuffer.IsEmpty)
-                    ProcessData();
-
-                if (waiting)
+                catch (Exception e)
                 {
-                    // Stay a while and listen.
-                    EventWaitHandle.WaitAny(mEvents, 100);
+                    Logging.Log.Exception(e);
                 }
             }
 

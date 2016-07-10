@@ -90,20 +90,27 @@ namespace Automation
         [STAThread]
         private void RunUI()
         {
-            // Init stuff
+            try
+            {
+                // Init stuff
 
-            // Need to do this from the same thread as Application.Run() will run from...
-            PortNotifier.Init();
+                // Need to do this from the same thread as Application.Run() will run from...
+                PortNotifier.Init();
 
-            mNotifyIcon = new UI.NotifyIcon(Properties.Resources.NotifyIcon);
+                mNotifyIcon = new UI.NotifyIcon(Properties.Resources.NotifyIcon);
 
-            // FIXME - NOT thread safe
-            updateNotificationStatus();
+                // FIXME - NOT thread safe
+                updateNotificationStatus();
 
-            Application.Run(mApplicationContext);
+                Application.Run(mApplicationContext);
 
-            // Signal quit
-            mRunning = false;
+                // Signal quit
+                mRunning = false;
+            }
+            catch (Exception e)
+            {
+                Logging.Log.Exception(e);
+            }
         }
 
         public void Run()
@@ -125,11 +132,9 @@ namespace Automation
 
                 //startWebEndpoint();
 
-
                 // FIXME 
                 //EventWaitHandle
                 Thread.Sleep(1000);
-
             }
 
             JoinUIThread();

@@ -20,6 +20,12 @@ namespace Logging
         public static void Fatal(string value)                          { InternalLog("FATAL  ", Assembly.GetCallingAssembly().GetName().Name, value); }
         public static void Fatal(string value, params object[] arg)     { InternalLog("FATAL  ", Assembly.GetCallingAssembly().GetName().Name, value, arg); }
 
+        public static void Exception(Exception e)
+        {
+            InternalLog("EXCEPTION", Assembly.GetCallingAssembly().GetName().Name, "Exception thrown: " + e.Message);
+            Console.WriteLine(e.StackTrace);
+        }
+
         private static void InternalLog(string type, string callee, string format, params object[] arg)
         {
             string text = arg != null ? string.Format(format, arg) : format;

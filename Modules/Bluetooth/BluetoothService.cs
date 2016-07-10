@@ -134,76 +134,83 @@ namespace Bluetooth
 
             while (mRunning)
             {
-                mBluetooth.RefreshDevices();
-
-                DateTime currTime = DateTime.Now;
-                DateTime nextScan = currTime + new TimeSpan(10, 0, 0);  // Just some high dummy value to diff against
-
-                if (mIntensiveScan)
+                try
                 {
-                    Console.WriteLine("Starting intensive scan");
-                    mIntensiveScan = false;
-                    intensiveScanTime = currTime + INTENSIVE_SCAN_DURATION;
-                }
+                    mBluetooth.RefreshDevices();
 
-                lock (mDevices)
-                {
-                    foreach (var info in mDevices)
+                    DateTime currTime = DateTime.Now;
+                    DateTime nextScan = currTime + new TimeSpan(10, 0, 0);  // Just some high dummy value to diff against
+
+                    if (mIntensiveScan)
                     {
-                        string btName = info.Device.BtName;
-                        BluetoothDevice device = info.Device;
-
-                        // Scan for device
-                        mBluetooth.UpdateDevice(btName);
-                        bool inRange = mBluetooth.InRange(btName);
-
-                        // Update last time device was seen.
-                        if (inRange)
-                            info.LastTime = currTime;
-
-                        // Initial notify to set up device state properly, but don't notify it's listeners
-                        if (info.FirstScan)
-                        {
-                            info.FirstScan = false;
-
-                            // Notify device of it's initial state.
-                            if (inRange)
-                                Console.WriteLine("Bluetooth: device {0} initially present", btName);
-                            else
-                                Console.WriteLine("Bluetooth: device {0} initially away", btName);
-                            device.OnStatusUpdate(inRange, true);
-                        }
-                        else if (device.InRange && !inRange && (currTime - info.LastTime) >= AWAY_TIMEOUT)
-                        {
-                            // Lost device
-                            Console.WriteLine("Lost device: {0}", btName);
-                            info.Device.OnStatusUpdate(inRange);
-                        }
-                        else if (!device.InRange && inRange)
-                        {
-                            // Found device
-                            Console.WriteLine("Found device: {0}", btName);
-                            info.Device.OnStatusUpdate(inRange);
-                        }
-
-                        TimeSpan delayTime;
-                        // Delay dependent on current state
-                        if (device.InRange)
-                            delayTime = SCAN_INTERVAL_PRESENT;
-                        else
-                            delayTime = SCAN_INTERVAL_AWAY;
-                        info.NextScan = currTime + delayTime;
-
-                        if (info.NextScan < nextScan)
-                            nextScan = info.NextScan;
+                        Console.WriteLine("Starting intensive scan");
+                        mIntensiveScan = false;
+                        intensiveScanTime = currTime + INTENSIVE_SCAN_DURATION;
                     }
+
+                    lock (mDevices)
+                    {
+                        foreach (var info in mDevices)
+                        {
+                            string btName = info.Device.BtName;
+                            BluetoothDevice device = info.Device;
+
+                            // Scan for device
+                            mBluetooth.UpdateDevice(btName);
+                            bool inRange = mBluetooth.InRange(btName);
+
+                            // Update last time device was seen.
+                            if (inRange)
+                                info.LastTime = currTime;
+
+                            // Initial notify to set up device state properly, but don't notify it's listeners
+                            if (info.FirstScan)
+                            {
+                                info.FirstScan = false;
+
+                                // Notify device of it's initial state.
+                                if (inRange)
+                                    Console.WriteLine("Bluetooth: device {0} initially present", btName);
+                                else
+                                    Console.WriteLine("Bluetooth: device {0} initially away", btName);
+                                device.OnStatusUpdate(inRange, true);
+                            }
+                            else if (device.InRange && !inRange && (currTime - info.LastTime) >= AWAY_TIMEOUT)
+                            {
+                                // Lost device
+                                Console.WriteLine("Lost device: {0}", btName);
+                                info.Device.OnStatusUpdate(inRange);
+                            }
+                            else if (!device.InRange && inRange)
+                            {
+                                // Found device
+                                Console.WriteLine("Found device: {0}", btName);
+                                info.Device.OnStatusUpdate(inRange);
+                            }
+
+                            TimeSpan delayTime;
+                            // Delay dependent on current state
+                            if (device.InRange)
+                                delayTime = SCAN_INTERVAL_PRESENT;
+                            else
+                                delayTime = SCAN_INTERVAL_AWAY;
+                            info.NextScan = currTime + delayTime;
+
+                            if (info.NextScan < nextScan)
+                                nextScan = info.NextScan;
+                        }
+                    }
+
+                    // Running intensive scan so don't sleep just yet.
+                    if (currTime < intensiveScanTime)
+                        continue;
+
+                    EventWaitHandle.WaitAny(mEvents, nextScan - currTime);
                 }
-
-                // Running intensive scan so don't sleep just yet.
-                if (currTime < intensiveScanTime)
-                    continue;
-
-                EventWaitHandle.WaitAny(mEvents, nextScan - currTime);
+                catch (Exception e)
+                {
+                    Logging.Log.Exception(e);
+                }
             }
         }
 
