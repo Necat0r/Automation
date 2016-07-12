@@ -11,6 +11,7 @@ using Mode;
 using ComputerProxy;
 using Module;
 using Scene;
+using Support;
 using System.Collections.Generic;
 using ArduinoLamps;
 using Events;
@@ -19,57 +20,8 @@ namespace Automation
 {
     class Logic
     {
-        enum TimeOfDay
-        {
-            Morning,
-            Day,
-            Evening,
-            Night
-        }
-
-        enum TimeOfWeek
-        {
-            Normal,
-            Weekend,
-        }
-
-        public bool IsDay()
-        {
-            return GetTimeOfDay() == TimeOfDay.Day;
-            //throw new NotImplementedException();
-
-            // TODO - Fix IsDay
-            //s = sun(latitude=59.3294, longitude=18.0686)
-            //return s.IsDay();
-        }
-
-        public bool IsNight()
-        {
-            return GetTimeOfDay() == TimeOfDay.Night;
-        }
-
-        private TimeOfDay GetTimeOfDay()
-        {
-            DateTime time = DateTime.Now;
-
-            if (time.Hour < 7)
-                return TimeOfDay.Night;
-            else if (time.Hour < 13)
-                return TimeOfDay.Morning;
-            else if (time.Hour < 18)
-                return TimeOfDay.Day;
-            else
-                return TimeOfDay.Evening;
-        }
-
-        private TimeOfWeek GetTimeOfWeek()
-        {
-            DateTime time = DateTime.Now;
-
-            if ((int)time.DayOfWeek < 5)
-                return TimeOfWeek.Normal;
-            return TimeOfWeek.Weekend;
-        }
+        // TODO - Fix IsDay
+        //s = sun(latitude=59.3294, longitude=18.0686)
 
         private DeviceManager mDeviceManager;
         private ServiceManager mServiceManager;
@@ -267,13 +219,13 @@ namespace Automation
             mLampBedroom.SwitchDevice(false);
             mLampBed.SwitchDevice(false);
 
-            if (!IsDay())
+            if (!TimeHelper.IsDay)
                 mLampHallway.SwitchDevice(true);
         }
 
         private void MacroHome()
         {
-            TimeOfDay tod = GetTimeOfDay();
+            TimeOfDay tod = TimeHelper.TimeOfDay;
 
             if (tod == TimeOfDay.Evening || tod == TimeOfDay.Day)
                 mDesktop.SetPower(true);
@@ -585,7 +537,7 @@ namespace Automation
 
                 Speak("Welcome home, Jonas");
 
-                TimeOfDay tod = GetTimeOfDay();
+                TimeOfDay tod = TimeHelper.TimeOfDay;
                 if (tod != TimeOfDay.Night)
                     mMode.CurrentMode = ModeService.Mode.Normal;
                 //else
