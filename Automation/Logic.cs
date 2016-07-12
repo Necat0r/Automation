@@ -53,7 +53,6 @@ namespace Automation
         private YamahaDevice mReceiver;
         private NexaLampDevice mLampLivingroom;
         private NexaLampDevice mLampTable;
-        private NexaLampDevice mLampTv;
         private NexaLampDevice mLampWindow;
         private LampDevice mLampDarthLeft;
         private LampDevice mLampDarthRight;
@@ -100,7 +99,6 @@ namespace Automation
             mReceiver = (YamahaDevice)deviceManager.GetDevice("receiver");
             mLampLivingroom = (NexaLampDevice)deviceManager.GetDevice("lamp_livingroom");
             mLampTable = (NexaLampDevice)deviceManager.GetDevice("lamp_table");
-            mLampTv = (NexaLampDevice)deviceManager.GetDevice("lamp_tv");
             mLampWindow = (NexaLampDevice)deviceManager.GetDevice("lamp_window");
             mLampDarthLeft = (ArduinoLamps.LampDevice)deviceManager.GetDevice("lamp_darth_left");
             mLampDarthRight = (ArduinoLamps.LampDevice)deviceManager.GetDevice("lamp_darth_right");
@@ -176,7 +174,6 @@ namespace Automation
             mDesktop.SetMonitorPower(false);
             mLampTable.SwitchDevice(false);
             mLampWindow.SwitchDevice(false);
-            mLampTv.SwitchDevice(true);
         }
 
         private void ApplyCinemaOffLight()
@@ -190,7 +187,6 @@ namespace Automation
         private void ApplyCinemaOffMisc()
         {
             Log.Info("Canceling misc cinema");
-            mLampTv.SwitchDevice(false);
             mCurtainLivingroom.Up();
         }
 
@@ -204,7 +200,6 @@ namespace Automation
 
             mLampLivingroom.SwitchDevice(false);
             mLampTable.SwitchDevice(false);
-            mLampTv.SwitchDevice(false);
             mLampWindow.SwitchDevice(false);
             mLampDarthLeft.SwitchDevice(false);
             mLampDarthRight.SwitchDevice(false);
@@ -222,7 +217,6 @@ namespace Automation
 
             mLampLivingroom.SwitchDevice(false);
             mLampTable.SwitchDevice(false);
-            mLampTv.SwitchDevice(false);
             mLampWindow.SwitchDevice(false);
             mLampBedroom.SwitchDevice(false);
             mLampBed.SwitchDevice(false);
@@ -266,7 +260,6 @@ namespace Automation
 
             mLampBedroom.SwitchDevice(false);
             mLampLivingroom.SwitchDevice(false);
-            mLampTv.SwitchDevice(false);
             mLampWindow.SwitchDevice(false);
             mLampHallway.SwitchDevice(false);
             mLampDarthLeft.SwitchDevice(false);
