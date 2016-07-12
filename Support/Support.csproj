@@ -82,6 +82,7 @@
     <Compile Include="RadioLock.cs" />
     <Compile Include="SerialHelper.cs" />
     <Compile Include="SerialRepository.cs" />
+    <Compile Include="TimeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Logging\Logging.csproj">
