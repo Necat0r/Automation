@@ -104,10 +104,14 @@ namespace Automation
             mLampDarthLeft = (ArduinoLamps.LampDevice)deviceManager.GetDevice("lamp_darth_left");
             mLampDarthRight = (ArduinoLamps.LampDevice)deviceManager.GetDevice("lamp_darth_right");
             mMotionLivingroom = (NexaSensorDevice)deviceManager.GetDevice("motion_livingroom");
+
             mSwitchSofa1 = (NexaSensorDevice)deviceManager.GetDevice("switch_sofa1");
-            mSwitchSofa1.OnDeviceEvent += OnSofaSwitchEvent;
             mSwitchSofa2 = (NexaSensorDevice)deviceManager.GetDevice("switch_sofa2");
-            mSwitchSofa2.OnDeviceEvent += OnSofaSwitchEvent;
+            if (mSwitchSofa1 != null)
+                mSwitchSofa1.OnDeviceEvent += OnSofaSwitchEvent;
+            if (mSwitchSofa2 != null)
+                mSwitchSofa2.OnDeviceEvent += OnSofaSwitchEvent;
+
             mDesktop = (ComputerProxyDevice)deviceManager.GetDevice("desktop");
 
             // Bedroom
@@ -118,7 +122,9 @@ namespace Automation
             // Hallway
             mLampHallway = (NexaLampDevice)deviceManager.GetDevice("lamp_hallway");
             mMotionDoor = (NexaSensorDevice)deviceManager.GetDevice("motion_door");
-            mMotionDoor.OnDeviceEvent += OnDoorSensor;
+            if (mMotionDoor != null)
+                mMotionDoor.OnDeviceEvent += OnDoorSensor;
+
             mSwitchHallway = (NexaSensorDevice)deviceManager.GetDevice("switch_hallway");
 
             // Presence devices
