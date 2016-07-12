@@ -14,8 +14,6 @@ namespace WebEndpoint
     {
         public ServiceModule(ServiceManager serviceManager)
         {
-            Log.Info("Number of registered services {0}", serviceManager.Services.Count);
-
             // Find all service methods having a ServiceGetContractAttribute attached to it.
             var bindQuery = from service in serviceManager.Services
                         from method in service.GetType().GetMethods()
