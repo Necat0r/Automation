@@ -79,8 +79,9 @@
     <Compile Include="EverflourishEvent.cs" />
     <Compile Include="Lighting2Protocol.cs" />
     <Compile Include="Lighting5Protocol.cs" />
-    <Compile Include="NexaDevice.cs" />
+    <Compile Include="NexaLampDevice.cs" />
     <Compile Include="NexaEvent.cs" />
+    <Compile Include="NexaSensorDevice.cs" />
     <Compile Include="RfxComService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

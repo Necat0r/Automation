@@ -4,19 +4,19 @@ using ModuleBase.Archetypes;
 using System;
 using System.Diagnostics;
 
-namespace RfxComService
+namespace RfxCom
 {
-    public class NexaDevice : LampDeviceBase
+    public class NexaLampDevice : LampDeviceBase
     {
-        protected class NexaState : LampState
+        protected class NexaLampState : LampState
         {
-            public NexaState()
+            public NexaLampState()
             {
                 Address = 0;
                 Unit = 0;
             }
 
-            public NexaState(NexaState state)
+            public NexaLampState(NexaLampState state)
             : base(state)
             {
                 Address = state.Address;
@@ -29,8 +29,8 @@ namespace RfxComService
 
         private RfxComService mService;
 
-        public NexaDevice(DeviceCreationInfo creationInfo)
-        : base(new NexaState(), creationInfo)
+        public NexaLampDevice(DeviceCreationInfo creationInfo)
+        : base(new NexaLampState(), creationInfo)
         {
             // Enable forced switching since we don't have a closed loop and prediction is causing state changes to be
             // disregarded since LampDeviceBase thinks it's already in that state.
@@ -40,18 +40,18 @@ namespace RfxComService
             if (mService == null)
                 throw new InvalidOperationException("RfxComService is missing, device cannot run");
 
-            ((NexaState)mState).Address = int.Parse(creationInfo.Configuration.code);
-            ((NexaState)mState).Unit = int.Parse(creationInfo.Configuration.unit);
+            ((NexaLampState)mState).Address = int.Parse(creationInfo.Configuration.code);
+            ((NexaLampState)mState).Unit = int.Parse(creationInfo.Configuration.unit);
 
             try
             {
-                ((NexaState)mState).Group = bool.Parse(creationInfo.Configuration.group);
+                ((NexaLampState)mState).Group = bool.Parse(creationInfo.Configuration.group);
             }
             catch (RuntimeBinderException) { }
 
             try
             {
-                ((NexaState)mState).Dimmable = bool.Parse(creationInfo.Configuration.dimmable);
+                ((NexaLampState)mState).Dimmable = bool.Parse(creationInfo.Configuration.dimmable);
             }
             catch (RuntimeBinderException) { }
         }
@@ -60,8 +60,8 @@ namespace RfxComService
         {
             base.ApplyState(state);
            
-            NexaState currentState = (NexaState)mState;
-            NexaState newState = (NexaState)state;
+            NexaLampState currentState = (NexaLampState)mState;
+            NexaLampState newState = (NexaLampState)state;
 
             Debug.Assert(newState.Address == currentState.Address);
             Debug.Assert(newState.Unit == currentState.Unit);
@@ -77,7 +77,7 @@ namespace RfxComService
             return mService.DimDevice(this, level);
         }
 
-        public int Address { get { return ((NexaState)mState).Address; } }
-        public int Unit { get { return ((NexaState)mState).Unit; } }
+        public int Address { get { return ((NexaLampState)mState).Address; } }
+        public int Unit { get { return ((NexaLampState)mState).Unit; } }
     }
 }

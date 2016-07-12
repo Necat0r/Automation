@@ -9,7 +9,7 @@ namespace RfxCom
     {
         public const byte PacketType = 0x11;
 
-        public static Object BuildPackage(NexaDevice device, float level)
+        public static Object BuildPackage(NexaLampDevice device, float level)
         {
             int command = device.Group ? 3 : 0;
             var dimmable = device.Dimmable;
@@ -59,10 +59,10 @@ namespace RfxCom
 
             // TODO - Use a pre-calculated lookup for finding devices
 
-            NexaDevice device = null;
+            NexaSensorDevice device = null;
             foreach (var entry in deviceManager.Devices)
             {
-                NexaDevice nexaDevice = entry.Value as NexaDevice;
+                NexaSensorDevice nexaDevice = entry.Value as NexaSensorDevice;
                 if (nexaDevice == null)
                     continue;
                 

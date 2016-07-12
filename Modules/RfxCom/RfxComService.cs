@@ -50,7 +50,6 @@ namespace RfxCom
 
         private DeviceManager mDeviceManager;
 
-        public event EventHandler<NexaEvent> OnNexaEvent;
         public event EventHandler<EverflourishEvent> OnEverflourishEvent;
 
         public RfxComService(string name, ServiceCreationInfo info)
@@ -238,9 +237,9 @@ namespace RfxCom
 
             bool result = false;
             DeviceBase device = action.Device;
-            if (device is NexaDevice)
+            if (device is NexaLampDevice)
             {
-                var package = Lighting2Protocol.BuildPackage((NexaDevice)device, action.Level);
+                var package = Lighting2Protocol.BuildPackage((NexaLampDevice)device, action.Level);
                 result = SendPackage(package);
             }
             else if (device is EverflourishDevice)
@@ -302,8 +301,8 @@ namespace RfxCom
                 if (nexaEvent != null)
                 {
                     //Console.WriteLine("Dispatching Nexa event");
-                    if (OnNexaEvent != null)
-                        OnNexaEvent(this, nexaEvent);
+                    // Notify device
+                    nexaEvent.Device.OnServiceEvent(nexaEvent);
                 }
             }
             else if (packet.PacketType == Lighting5Protocol.PacketType)
