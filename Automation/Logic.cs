@@ -1,20 +1,20 @@
-﻿using System;
-using RfxComService;
+﻿using ArduinoLamps;
+using Bluetooth;
+using ComputerProxy;
 using Curtain;
 using Epson;
-using Speech;
-using WakeOnLan;
-using Bluetooth;
-using Yamaha;
-using System.Threading;
-using Mode;
-using ComputerProxy;
-using Module;
-using Scene;
-using Support;
-using System.Collections.Generic;
-using ArduinoLamps;
 using Events;
+using Mode;
+using Module;
+using RfxCom;
+using Scene;
+using Speech;
+using Support;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using WakeOnLan;
+using Yamaha;
 
 namespace Automation
 {
@@ -50,25 +50,26 @@ namespace Automation
         private CurtainDevice mCurtainLivingroom;
         private EpsonDevice mProjector;
         private YamahaDevice mReceiver;
-        private NexaDevice mLampLivingroom;
-        private NexaDevice mLampTable;
-        private NexaDevice mLampTv;
-        private NexaDevice mLampWindow;
+        private NexaLampDevice mLampLivingroom;
+        private NexaLampDevice mLampTable;
+        private NexaLampDevice mLampTv;
+        private NexaLampDevice mLampWindow;
         private LampDevice mLampDarthLeft;
         private LampDevice mLampDarthRight;
-        private NexaDevice mMotionLivingroom;
-        private NexaDevice mSwitchSofa1;
-        private NexaDevice mSwitchSofa2;
+        private NexaSensorDevice mMotionLivingroom;
+        private NexaSensorDevice mSwitchSofa1;
+        private NexaSensorDevice mSwitchSofa2;
         private ComputerProxyDevice mDesktop;
 
         // Bedroom devices
         private CurtainDevice mCurtainBedroom;
-        private NexaDevice mLampBedroom;
-        private NexaDevice mLampBed;
+        private NexaLampDevice mLampBedroom;
+        private NexaLampDevice mLampBed;
 
         // Hallway devices
-        private NexaDevice mLampHallway;
-        private NexaDevice mMotionDoor;
+        private NexaLampDevice mLampHallway;
+        private NexaSensorDevice mMotionDoor;
+        private NexaSensorDevice mSwitchHallway;
 
         // Presence devices
         private BluetoothDevice mNexus5;
@@ -77,10 +78,6 @@ namespace Automation
         {
             mDeviceManager = deviceManager;
             mServiceManager = serviceManager;
-
-            RfxComService.RfxComService rfxCom = (RfxComService.RfxComService)serviceManager.GetService(typeof(RfxComService.RfxComService));
-            if (rfxCom != null)
-                rfxCom.OnNexaEvent += OnNexaEvent;
 
             mWake = (WakeOnLanService)serviceManager.GetService(typeof(WakeOnLan.WakeOnLanService));
 
@@ -100,25 +97,29 @@ namespace Automation
             mCurtainLivingroom = (CurtainDevice)deviceManager.GetDevice("curtain_livingroom");
             mProjector = (EpsonDevice)deviceManager.GetDevice("projector");
             mReceiver = (YamahaDevice)deviceManager.GetDevice("receiver");
-            mLampLivingroom = (NexaDevice)deviceManager.GetDevice("lamp_livingroom");
-            mLampTable = (NexaDevice)deviceManager.GetDevice("lamp_table");
-            mLampTv = (NexaDevice)deviceManager.GetDevice("lamp_tv");
-            mLampWindow = (NexaDevice)deviceManager.GetDevice("lamp_window");
+            mLampLivingroom = (NexaLampDevice)deviceManager.GetDevice("lamp_livingroom");
+            mLampTable = (NexaLampDevice)deviceManager.GetDevice("lamp_table");
+            mLampTv = (NexaLampDevice)deviceManager.GetDevice("lamp_tv");
+            mLampWindow = (NexaLampDevice)deviceManager.GetDevice("lamp_window");
             mLampDarthLeft = (ArduinoLamps.LampDevice)deviceManager.GetDevice("lamp_darth_left");
             mLampDarthRight = (ArduinoLamps.LampDevice)deviceManager.GetDevice("lamp_darth_right");
-            mMotionLivingroom = (NexaDevice)deviceManager.GetDevice("motion_livingroom");
-            mSwitchSofa1 = (NexaDevice)deviceManager.GetDevice("switch_sofa1");
-            mSwitchSofa2 = (NexaDevice)deviceManager.GetDevice("switch_sofa2");
+            mMotionLivingroom = (NexaSensorDevice)deviceManager.GetDevice("motion_livingroom");
+            mSwitchSofa1 = (NexaSensorDevice)deviceManager.GetDevice("switch_sofa1");
+            mSwitchSofa1.OnDeviceEvent += OnSofaSwitchEvent;
+            mSwitchSofa2 = (NexaSensorDevice)deviceManager.GetDevice("switch_sofa2");
+            mSwitchSofa2.OnDeviceEvent += OnSofaSwitchEvent;
             mDesktop = (ComputerProxyDevice)deviceManager.GetDevice("desktop");
 
             // Bedroom
             mCurtainBedroom = (CurtainDevice)deviceManager.GetDevice("curtain_bedroom");
-            mLampBedroom = (NexaDevice)deviceManager.GetDevice("lamp_bedroom");
-            mLampBed = (NexaDevice)deviceManager.GetDevice("lamp_bed");
+            mLampBedroom = (NexaLampDevice)deviceManager.GetDevice("lamp_bedroom");
+            mLampBed = (NexaLampDevice)deviceManager.GetDevice("lamp_bed");
 
             // Hallway
-            mLampHallway = (NexaDevice)deviceManager.GetDevice("lamp_hallway");
-            mMotionDoor = (NexaDevice)deviceManager.GetDevice("motion_door");
+            mLampHallway = (NexaLampDevice)deviceManager.GetDevice("lamp_hallway");
+            mMotionDoor = (NexaSensorDevice)deviceManager.GetDevice("motion_door");
+            mMotionDoor.OnDeviceEvent += OnDoorSensor;
+            mSwitchHallway = (NexaSensorDevice)deviceManager.GetDevice("switch_hallway");
 
             // Presence devices
             mNexus5 = (BluetoothDevice)deviceManager.GetDevice("presence_nexus_5");
@@ -207,7 +208,7 @@ namespace Automation
 
         private void MacroLeaving()
         {
-            mDesktop.SetPower(false);;
+            mDesktop.SetPower(false);
             mReceiver.SetPower(false);
             if (mProjector != null)
                 mProjector.PowerOff();
@@ -377,34 +378,10 @@ namespace Automation
             }
 
             return true;
-
-            //var mapping = new Dictionary<string, Delegate>();
-            //var mapping = {self.MACRO_CINEMA: self.macroCinema,
-            //           self.MACRO_CINEMAOff: self.macroCinemaOff,
-            //           "off": self.macroOff,
-            //           "leaving": self.macroLeaving,
-            //           "home": self.macroHome,
-            //           "night": self.macroNight,
-            //           "cinema": self.macroCinema,
-            //           "cinema_off": self.macroCinemaOff,
-            //           "video": self.macroVideo,
-            //           "video_computer": self.macroVideoComputer,
-            //           "video_off": self.macroVideoOff,
-            //           "curtaintest": self.macroCurtainTest,
-            //           "test": self.macroTest}
-
-            //macroName = macroName.ToLower();
-            //if (macroName in mapping)
-            //{
-            //    Console.WriteLine("Running macro", macroName);
-            //    mapping[macroName]();
-            //    return true;
-            //}
-            //return false;
         }
         #endregion
 
-        private void OnNexaEvent(object sender, NexaEvent nexaEvent)
+        private void OnSofaSwitchEvent(object sender, NexaEvent nexaEvent)
         {
             // Sofa table switches
             if (nexaEvent.Device == mSwitchSofa1)
@@ -459,23 +436,22 @@ namespace Automation
                     mSofaSwitch = SofaSwitch.Button1Off;
                 }
             }
+       }
 
-            // Motion sensor
-            if (nexaEvent.Device == mMotionDoor)
+        private void OnDoorSensor(object sender, NexaEvent nexaEvent)
+        {
+            Console.WriteLine("Door sensor");
+
+            // On
+            if (nexaEvent.Value)
             {
-                Console.WriteLine("Door sensor");
-
-                // On
-                if (nexaEvent.Value)
+                if (mMode != null && mMode.CurrentMode == ModeService.Mode.Away)
                 {
-                    if (mMode != null && mMode.CurrentMode == ModeService.Mode.Away)
-                    {
-                        if (!IsDay())
-                            mLampHallway.SwitchDevice(true);
+                    if (!TimeHelper.IsDay)
+                        mLampHallway.SwitchDevice(true);
 
-                        if (mNexus5 != null)
-                            mNexus5.CheckDevice();      // Trigger scan
-                    }
+                    if (mNexus5 != null)
+                        mNexus5.CheckDevice();      // Trigger scan
                 }
             }
         }
