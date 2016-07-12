@@ -1,4 +1,5 @@
-﻿using Module;
+﻿using Logging;
+using Module;
 using Support;
 using System;
 using System.Collections.Generic;
@@ -83,7 +84,7 @@ namespace RfxCom
         {
             if (!mSerialHelper.IsConnected)
             {
-                Console.WriteLine("Disregarding SwitchDevice() request for device {0} since we're not connected", device.Name);
+                Log.Warning("Disregarding SwitchDevice() request for device {0} since we're not connected", device.Name);
                 return false;
             }
 
@@ -104,7 +105,7 @@ namespace RfxCom
         {
             if (!mSerialHelper.IsConnected)
             {
-                Console.WriteLine("Disregarding DimDevice() request for device {0} since we're not connected", device.Name);
+                Log.Warning("Disregarding DimDevice() request for device {0} since we're not connected", device.Name);
                 return false;
             }
 
@@ -152,7 +153,7 @@ namespace RfxCom
                 // Purge stale data
                 if (mLastReceive != null && !mBuffer.IsEmpty && (mPackageTimeout < currTime - mLastReceive))
                 {
-                    Console.WriteLine("Discarding stale data");
+                    Log.Debug("Discarding stale data");
                     mBuffer.Clear();
                 }
 
@@ -250,7 +251,7 @@ namespace RfxCom
 
             if (!result)
             {
-                Console.WriteLine("Failed processing action, releasing lock directly");
+                Log.Warning("Failed processing action, releasing lock directly");
                 mRadioLock.Release();
             }
         }
@@ -263,7 +264,7 @@ namespace RfxCom
                 var packageLength = mBuffer.Data[0];
                 if (packageLength < Marshal.SizeOf(typeof(RFXPACKET)))
                 {
-                    Console.WriteLine("Package too small. Disconnecting to retry again");
+                    Log.Warning("Package too small. Disconnecting to retry again");
                     mSerialHelper.Disconnect();
                     return;
                 }
@@ -300,7 +301,7 @@ namespace RfxCom
                 NexaEvent nexaEvent = Lighting2Protocol.HandlePackage(mDeviceManager, memory);
                 if (nexaEvent != null)
                 {
-                    //Console.WriteLine("Dispatching Nexa event");
+                    //Log.Debug("Dispatching Nexa event");
                     // Notify device
                     nexaEvent.Device.OnServiceEvent(nexaEvent);
                 }
@@ -310,14 +311,14 @@ namespace RfxCom
                 EverflourishEvent everflourishEvent = Lighting5Protocol.HandlePackage(mDeviceManager, memory);
                 if (everflourishEvent != null)
                 {
-                    //Console.WriteLine("Dispatching Everflourish event");
+                    //Log.Debug("Dispatching Everflourish event");
                     if (OnEverflourishEvent != null)
                         OnEverflourishEvent(this, everflourishEvent);
                 }
             }
             else
             {
-                Console.WriteLine("Discarding unhandled package. Size: {0}, Type: {1}, subType: {2}, sequence: {3}",
+                Log.Warning("Discarding unhandled package. Size: {0}, Type: {1}, subType: {2}, sequence: {3}",
                     data.Length, packet.PacketType, packet.Subtype, packet.SequenceNumber);
                 PrintRawPackage(data);
             }
@@ -340,7 +341,7 @@ namespace RfxCom
 
                 if (package.msg == RXRESPONSE.RESPONSE_NAK || package.msg == RXRESPONSE.RESPONSE_NAK_ZERO)
                 {
-                    Console.WriteLine("Transmit failed with result: {0}", package.msg);
+                    Log.Warning("Transmit failed with result: {0}", package.msg);
                 }
             }
         }
@@ -359,7 +360,7 @@ namespace RfxCom
 
             if (!mSerialHelper.IsConnected)
             {
-                Console.WriteLine("Discarding package since we're not connected");
+                Log.Warning("Discarding package since we're not connected");
                 return false;
             }
             

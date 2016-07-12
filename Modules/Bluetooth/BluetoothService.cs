@@ -1,4 +1,5 @@
-﻿using Module;
+﻿using Logging;
+using Module;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -99,7 +100,7 @@ namespace Bluetooth
             // Refresh available devices
             mBluetooth.RefreshDevices();
             mDeviceNames = mBluetooth.GetDevices();
-            Console.WriteLine("Bluetooth devices: {0}", mDeviceNames);
+            Log.Info("Bluetooth devices: {0}", mDeviceNames);
 
             // Set up scan thread.
             mEvents = new EventWaitHandle[] { mStopEvent, mDeviceEvent };
@@ -125,7 +126,7 @@ namespace Bluetooth
 
         private void _searchThread()
         {
-            Console.WriteLine("Starting Bluetooth search thread");
+            Log.Info("Starting Bluetooth search thread");
 
             // Avoid the initial lock contestion for mDevices
             Thread.Sleep(5000);
@@ -143,7 +144,7 @@ namespace Bluetooth
 
                     if (mIntensiveScan)
                     {
-                        Console.WriteLine("Starting intensive scan");
+                        Log.Debug("Starting intensive scan");
                         mIntensiveScan = false;
                         intensiveScanTime = currTime + INTENSIVE_SCAN_DURATION;
                     }
@@ -170,21 +171,21 @@ namespace Bluetooth
 
                                 // Notify device of it's initial state.
                                 if (inRange)
-                                    Console.WriteLine("Bluetooth: device {0} initially present", btName);
+                                    Log.Info("Bluetooth: device {0} initially present", btName);
                                 else
-                                    Console.WriteLine("Bluetooth: device {0} initially away", btName);
+                                    Log.Info("Bluetooth: device {0} initially away", btName);
                                 device.OnStatusUpdate(inRange, true);
                             }
                             else if (device.InRange && !inRange && (currTime - info.LastTime) >= AWAY_TIMEOUT)
                             {
                                 // Lost device
-                                Console.WriteLine("Lost device: {0}", btName);
+                                Log.Debug("Lost device: {0}", btName);
                                 info.Device.OnStatusUpdate(inRange);
                             }
                             else if (!device.InRange && inRange)
                             {
                                 // Found device
-                                Console.WriteLine("Found device: {0}", btName);
+                                Log.Debug("Found device: {0}", btName);
                                 info.Device.OnStatusUpdate(inRange);
                             }
 
@@ -218,7 +219,7 @@ namespace Bluetooth
         {
             if (mDeviceNames == null || mDeviceNames.Length == 0)
             {
-                Console.WriteLine("WARNING: No devices available on this machine. Please pair '{0}' with this machine.", device.BtName);
+                Log.Warning("WARNING: No devices available on this machine. Please pair '{0}' with this machine.", device.BtName);
                 return;
             }
 

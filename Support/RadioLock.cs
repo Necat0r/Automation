@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -98,7 +99,7 @@ namespace Support
             mOwner = name;
 
             mTimeout = timeout;
-            Console.WriteLine("RadioLock - Acquired by thread {0} for {1} milliseconds", mOwner, mTimeout);
+            Log.Debug("RadioLock - Acquired by thread {0} for {1} milliseconds", mOwner, mTimeout);
 
             mTimeoutThread = new Thread(Timeout);
             mReleaseEvent.Reset();
@@ -117,7 +118,7 @@ namespace Support
 
             mReleaseEvent.Set();
 
-            Console.WriteLine("RadioLock - Released");
+            Log.Debug("RadioLock - Released");
         }
 
         private void Timeout()
@@ -125,7 +126,7 @@ namespace Support
             bool signal = mReleaseEvent.WaitOne(mTimeout);
             if (!signal)
             {
-                Console.WriteLine("Lock wasn't released in time. Thread: {0}", mOwner);
+                Log.Error("Lock wasn't released in time. Thread: {0}", mOwner);
                 Release();
                 mReleaseEvent.Reset();
             }

@@ -1,7 +1,7 @@
-﻿using Module;
+﻿using Logging;
+using Module;
 using Support;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Curtain
@@ -36,7 +36,7 @@ namespace Curtain
             // Early out in case we're not connected yet.
             if (!mSerialHelper.IsConnected)
             {
-                Console.WriteLine("Discarding curtain package since we're not connected");
+                Log.Warning("Discarding curtain package since we're not connected");
             }
 
             // Acquire the lock for a bit longer than what we need so it won't timeout.

@@ -4,6 +4,7 @@ using ComputerProxy;
 using Curtain;
 using Epson;
 using Events;
+using Logging;
 using Mode;
 using Module;
 using RfxCom;
@@ -154,7 +155,7 @@ namespace Automation
         #region Scenes
         private void ApplyCinemaLight()
         {
-            Console.WriteLine("Applying light cinema");
+            Log.Info("Applying light cinema");
             if (mReceiver != null)
             {
                 mReceiver.SetPower(true);
@@ -169,7 +170,7 @@ namespace Automation
 
         private void ApplyCinemaMisc()
         {
-            Console.WriteLine("Applying misc cinema");
+            Log.Info("Applying misc cinema");
             mCurtainLivingroom.Down();
 
             mDesktop.SetMonitorPower(false);
@@ -180,7 +181,7 @@ namespace Automation
 
         private void ApplyCinemaOffLight()
         {
-            Console.WriteLine("Canceling light cinema mode");
+            Log.Info("Canceling light cinema mode");
             mReceiver.SetPower(false);
             if (mProjector != null)
                 mProjector.PowerOff();
@@ -188,7 +189,7 @@ namespace Automation
 
         private void ApplyCinemaOffMisc()
         {
-            Console.WriteLine("Canceling misc cinema");
+            Log.Info("Canceling misc cinema");
             mLampTv.SwitchDevice(false);
             mCurtainLivingroom.Up();
         }
@@ -392,7 +393,7 @@ namespace Automation
             // Sofa table switches
             if (nexaEvent.Device == mSwitchSofa1)
             {
-                Console.WriteLine("Sofa switch 1");
+                Log.Debug("Sofa switch 1");
 
                 if (nexaEvent.Value)
                 {
@@ -417,7 +418,7 @@ namespace Automation
             }
             else if (nexaEvent.Device == mSwitchSofa2)
             {
-                Console.WriteLine("Sofa switch 2");
+                Log.Debug("Sofa switch 2");
                 if (nexaEvent.Value)
                 {
                     if (mSofaSwitch != SofaSwitch.Button1On)
@@ -446,7 +447,7 @@ namespace Automation
 
         private void OnDoorSensor(object sender, NexaEvent nexaEvent)
         {
-            Console.WriteLine("Door sensor");
+            Log.Debug("Door sensor");
 
             // On
             if (nexaEvent.Value)
@@ -485,7 +486,7 @@ namespace Automation
                 }
                 else if (modeEvent.NewMode == ModeService.Mode.Away)
                 {
-                    Console.WriteLine("Away mode activated");
+                    Log.Info("Away mode activated");
                     RunMacro("off");
                 }
             }

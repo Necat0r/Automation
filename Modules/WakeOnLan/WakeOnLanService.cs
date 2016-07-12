@@ -1,8 +1,8 @@
-﻿using System;
-using System.Globalization;
-using System.Net.Sockets;
-using System.Net;
+﻿using Logging;
 using Module;
+using System.Globalization;
+using System.Net;
+using System.Net.Sockets;
 
 namespace WakeOnLan
 {
@@ -15,7 +15,7 @@ namespace WakeOnLan
         [ServicePutContract()]
         public void OnWakeRequest(string macAddress)
         {
-            Console.WriteLine("Attempting to wake up: " + macAddress);
+            Log.Info("Attempting to wake up: " + macAddress);
 
             byte[] buffer = buildPackage(macAddress);
             if (buffer == null)
@@ -29,7 +29,7 @@ namespace WakeOnLan
             byte[] buffer = buildPackage(macAddress);
             if (buffer == null)
             {
-                Console.WriteLine("Invalid mac address. " + macAddress);
+                Log.Warning("Invalid mac address. " + macAddress);
                 return;
             }
 

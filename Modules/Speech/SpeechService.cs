@@ -116,7 +116,7 @@ namespace Speech
                         // Find and execute command
                         DeviceBase.VoiceCommand command = mVoiceCommands[text];
 
-                        Console.WriteLine("Running voice command: " + command.Command);
+                        Log.Info("Running voice command: " + command.Command);
                         command.Delegate();
                         Speak("Ok");
                     }
@@ -216,7 +216,7 @@ namespace Speech
         [ServicePutContract("recognize?{text}")]
         public void OnRecognizeRequest(string text)
         {
-            Console.WriteLine("Trying to recognize: " + text);
+            Log.Debug("Trying to recognize: " + text);
 
             // Try to find a high match with Levenchtein
             float bestResult = 0.0f;
@@ -235,7 +235,7 @@ namespace Speech
 
             if (bestResult > 0.72)
             {
-                Console.WriteLine("Matched to: " + bestCommand.Command + ", confidence: " + bestResult);
+                Log.Debug("Matched to: " + bestCommand.Command + ", confidence: " + bestResult);
 
                 Speak("Ok");
 
@@ -244,7 +244,7 @@ namespace Speech
             }
             else
             {
-                Console.WriteLine("No match for '" + text + "'. Highest was: " + bestCommand.Command + ", confidence: " + bestResult);
+                Log.Debug("No match for '" + text + "'. Highest was: " + bestCommand.Command + ", confidence: " + bestResult);
                 Speak("I didn't get that");
             }
         }

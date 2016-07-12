@@ -1,4 +1,5 @@
-﻿using Module;
+﻿using Logging;
+using Module;
 using System;
 using System.Runtime.InteropServices;
 
@@ -10,7 +11,7 @@ namespace RfxCom
 
         public static Object BuildPackage(EverflourishDevice device, bool value)
         {
-            Console.WriteLine("Sending lighting 5 package");
+            Log.Debug("Sending lighting 5 package");
 
             LIGHTING5 package = new LIGHTING5();
             package.id1 = 0;

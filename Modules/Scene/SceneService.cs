@@ -1,4 +1,5 @@
-﻿using Module;
+﻿using Logging;
+using Module;
 using System;
 
 namespace Scene
@@ -15,7 +16,7 @@ namespace Scene
         [ServicePutContract("{scene}")]
         public void OnSceneRequest(string scene)
         {
-            Console.WriteLine("Scene requested: " + scene);
+            Log.Info("Scene requested: " + scene);
             if (OnSceneEvent != null)
                 OnSceneEvent(this, new SceneEvent(scene));
         }

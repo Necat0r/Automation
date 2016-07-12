@@ -80,6 +80,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Logging\Logging.csproj">
+      <Project>{c13e47b0-a74b-4a26-99c3-ea4eafc4d155}</Project>
+      <Name>Logging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ModuleBase\ModuleBase.csproj">
       <Project>{84d44835-8ff1-4a09-a56f-c979313abddb}</Project>
       <Name>ModuleBase</Name>

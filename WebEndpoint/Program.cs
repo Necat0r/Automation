@@ -5,6 +5,7 @@
     using Microsoft.AspNet.SignalR;
     using Owin;
     using Microsoft.Owin.Hosting;
+    using Logging;
 
     public class Host : IDisposable
     {
@@ -35,7 +36,7 @@
             {
                 // Need to add acl for that address.
                 // netsh http add urlacl url=http://+:<port>/automation/ user=<machine>\<user>
-                Console.WriteLine("Probably an ACL issue.\nRun the following in an elevated command prompt:\nnetsh http add urlacl url=http://+:" + port + "/ user=<machine>\\<user>");
+                Log.Fatal("Probably an ACL issue.\nRun the following in an elevated command prompt:\nnetsh http add urlacl url=http://+:" + port + "/ user=<machine>\\<user>");
 
                 /*
                 netsh http add urlacl url=https://+:4443/ user=<your user name>”
@@ -49,25 +50,20 @@
                 throw;
             }
 
-            Console.WriteLine("Your application is running on " + uri);
-            //Console.WriteLine("Press any [Enter] to close the host.");
-            //Console.ReadLine();
+            Log.Info("Your application is running on " + uri);
 
             //using (Microsoft.Owin.Hosting.WebApp.Start("http://localhost:8080"))
             //{
-            //    Console.WriteLine("Server running at http://localhost:8080/");
+            //    Log.Info("Server running at http://localhost:8080/");
             //    Console.ReadLine();
             //}
 
             //// SignalR server for WebSockets
             //using (WebApplication.Start<Startup>("http://localhost:8080/"))
             //{
-            //    Console.WriteLine("Server running at http://localhost:8080/");
+            //    Log.Info("Server running at http://localhost:8080/");
             //    Console.ReadLine();
             //}
-
-
-
         }
 
         public void Dispose()

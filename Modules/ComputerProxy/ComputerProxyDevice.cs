@@ -1,7 +1,7 @@
-﻿using Module;
+﻿using Logging;
+using Module;
 using System;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using WakeOnLan;
 
@@ -102,7 +102,7 @@ namespace ComputerProxy
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Request failed with error: " + e.Message);
+                        Log.Warning("Request failed with error: " + e.Message);
                     }
                 }
             });

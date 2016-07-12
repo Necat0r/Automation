@@ -153,7 +153,7 @@ namespace Yamaha
 
         public void SetScene(int scene)
         {
-            Console.WriteLine("YamahaDevice::SetScene() is not implemented!");
+            Log.Error("YamahaDevice::SetScene() is not implemented!");
         }
 
         public override void ApplyState(DeviceBase.DeviceState state)

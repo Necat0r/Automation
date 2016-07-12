@@ -2,11 +2,11 @@
 using Nancy;
 using System;
 using System.Text;
-using System.Dynamic;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
 using Nancy.ModelBinding;
+using Logging;
 
 namespace WebEndpoint
 {
@@ -14,7 +14,7 @@ namespace WebEndpoint
     {
         public ServiceModule(ServiceManager serviceManager)
         {
-            Console.WriteLine("Number of registered services {0}", serviceManager.Services.Count);
+            Log.Info("Number of registered services {0}", serviceManager.Services.Count);
 
             // Find all service methods having a ServiceGetContractAttribute attached to it.
             var bindQuery = from service in serviceManager.Services
@@ -57,7 +57,7 @@ namespace WebEndpoint
                             Request.Body.Position = 0;
                             Request.Body.Read(buffer, 0, (int)Request.Body.Length);
                             string bodyStr = Encoding.Default.GetString(buffer);
-                            Console.WriteLine("Got body data:\n{0}", bodyStr);
+                            Log.Debug("Got body data:\n{0}", bodyStr);
 
                             var serializer = new Nancy.Json.JavaScriptSerializer();
                             try
@@ -69,7 +69,7 @@ namespace WebEndpoint
                             catch (System.ArgumentException)
                             {
                                 // Just eat it.
-                                Console.WriteLine("Got request with invalid json body for url: " + Request.Url);
+                                Log.Warning("Got request with invalid json body for url: " + Request.Url);
                                 return null;
                             }
                         }
@@ -106,7 +106,7 @@ namespace WebEndpoint
                     }
                     catch (TargetInvocationException e)
                     {
-                        Console.WriteLine(
+                        Log.Error(
                             "Invocation exception of uri: " + uri + "\n"
                             + "Exception: " + e.Message + "\n"
                             + "Callstack:" + e.StackTrace + "\n"
@@ -120,13 +120,13 @@ namespace WebEndpoint
 
                 if (isPut)
                 {
-                    //Console.WriteLine("Adding PUT binding for {0}", uri);
+                    //Log.Debug("Adding PUT binding for {0}", uri);
                     Put[uri] = lambda;
                     Post[uri] = lambda;
                 }
                 else
                 {
-                    //Console.WriteLine("Adding GET binding for {0}", uri);
+                    //Log.Debug("Adding GET binding for {0}", uri);
                     Get[uri] = lambda;
                 }
             }

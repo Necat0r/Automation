@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logging;
+using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
@@ -152,11 +153,11 @@ namespace Support
             }
             catch (Exception e)
             {
-                Console.WriteLine("{0}: Could not open port {1}, error: {2}", mName, mPort, e.Message);
+                Log.Warning("{0}: Could not open port {1}, error: {2}", mName, mPort, e.Message);
                 return false;
             }
 
-            Console.WriteLine("{0}: Successfully opened port {1}", mName, mPort);
+            Log.Info("{0}: Successfully opened port {1}", mName, mPort);
             foreach (var listener in mListeners)
                 listener.OnConnected();
 
@@ -196,7 +197,7 @@ namespace Support
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("{0}: Write timed out. Disconnecting", mName);
+                    Log.Warning("{0}: Write timed out. Disconnecting", mName);
                     Disconnect();
                     return false;
                 }
@@ -237,8 +238,8 @@ namespace Support
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Exception: " + e.Message);
-                    Console.WriteLine("{0}: Could not read data. Disconnecting...", mName);
+                    Log.Error("Exception: " + e.Message);
+                    Log.Error("{0}: Could not read data. Disconnecting...", mName);
                     Disconnect();
                     continue;
                 }
@@ -256,7 +257,7 @@ namespace Support
             // Clean up
             if (IsConnected)
             {
-                Console.WriteLine("{0}: Closing port {1}", mName, mPort);
+                Log.Info("{0}: Closing port {1}", mName, mPort);
                 Disconnect();
             }
         }

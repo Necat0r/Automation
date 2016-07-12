@@ -84,7 +84,7 @@ namespace Yamaha
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Request failed with error: " + e.Message);
+                    Log.Warning("Request failed with error: " + e.Message);
                 }
 
                 return default(string);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logging;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -46,7 +47,7 @@ namespace Support
                         if (header.DeviceType == DBT_DEVTYP_PORT)
                         {
                             string portName = Marshal.PtrToStringAuto((IntPtr)((long)m.LParam + 12));
-                            Console.WriteLine("Port {0} was added", portName);
+                            Log.Info("Port {0} was added", portName);
 
                             if (portName.StartsWith("COM"))
                             {

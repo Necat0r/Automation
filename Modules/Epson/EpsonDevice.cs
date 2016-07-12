@@ -1,4 +1,5 @@
-﻿using Module;
+﻿using Logging;
+using Module;
 using Support;
 using System;
 using System.Collections.Generic;
@@ -245,7 +246,7 @@ namespace Epson
         private void SendString(string command)
         {
             if (command.Length > 1)
-                Console.WriteLine("EpsonDevice name=" + Name + " - Sending command: " + command);
+                Log.Debug("EpsonDevice name=" + Name + " - Sending command: " + command);
 
             byte[] data = System.Text.Encoding.ASCII.GetBytes(command);
             mSerialHelper.WriteData(data);
@@ -352,7 +353,7 @@ namespace Epson
 
         public void OnDisconnected()
         {
-            Console.WriteLine("Got disconnected from projector");
+            Log.Info("Got disconnected from projector");
 
             // Purge out buffer.
             lock (mBuffer)
@@ -361,7 +362,7 @@ namespace Epson
 
         public void OnData(byte[] data)
         {
-            Console.WriteLine("Got data " + System.Text.Encoding.ASCII.GetString(data));
+            Log.Debug("Got data " + System.Text.Encoding.ASCII.GetString(data));
 
             bool responseFound = false;
             byte[] package = null;
@@ -417,7 +418,7 @@ namespace Epson
             {
                 response = System.Text.Encoding.ASCII.GetString(responseData).Replace("\r", "");
 
-                Console.WriteLine("Got response: '{0}'", response);
+                Log.Debug("Got response: '{0}'", response);
 
                 if (response.Equals("ERR"))
                 {
@@ -435,7 +436,7 @@ namespace Epson
                     string[] split = response.Split(new char[] { '=' });
                     if (split.Length < 2)
                     {
-                        Console.WriteLine("Unknown response: '{0}'", response);
+                        Log.Warning("Unknown response: '{0}'", response);
                         return;
                     }
 
@@ -459,7 +460,7 @@ namespace Epson
                     if (key != null && key == "PWR")
                     {
                         State.Power = int.Parse(value) > 0;
-                        Console.WriteLine("Power: " + State.Power);
+                        Log.Debug("Power: " + State.Power);
 
                         // Get source as well when it's powered up
                         if (State.Power)
@@ -471,7 +472,7 @@ namespace Epson
                     if (key != null && key == "LAMP")
                     {
                         State.LampHours = int.Parse(value);
-                        Console.WriteLine("Lamp: " + State.LampHours);
+                        Log.Debug("Lamp: " + State.LampHours);
                     }
                     break;
 
@@ -481,15 +482,15 @@ namespace Epson
                         if (value == "A0")
                             State.Source = InputSource.Hdmi;
                         else
-                            Console.WriteLine("Source " + value + " was not handled");
+                            Log.Warning("Source " + value + " was not handled");
 
-                        Console.WriteLine("Source: " + State.Source.ToString());
+                        Log.Debug("Source: " + State.Source.ToString());
                     }
                     break;
 
                 default:
                     if (response != null)
-                        Console.WriteLine("Unhandled response: {0} when running command: {1}", response, mRunningCommand.Command);
+                        Log.Warning("Unhandled response: {0} when running command: {1}", response, mRunningCommand.Command);
                     break;
             }
         }
