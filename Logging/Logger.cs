@@ -26,7 +26,7 @@ namespace Logging
         {
             string text = arg != null ? string.Format(format, arg) : format;
 
-            Console.WriteLine("{0} {1,-7} [{2,-12}]: {3}", DateTime.Now.ToString(), type, callee, text);
+            Console.WriteLine("{0} {1,-9} [{2,-12}]: {3}", DateTime.Now.ToString(), type, callee, text);
         }
 
     }
