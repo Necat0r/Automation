@@ -2,7 +2,7 @@
 using Module;
 using ModuleBase.Archetypes;
 
-namespace RfxComService
+namespace RfxCom
 {
     public class EverflourishDevice : LampDeviceBase
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace RfxComService
+namespace RfxCom
 {
     public class RfxComService : ServiceBase, SerialHelper.SerialListener, IDisposable
     {

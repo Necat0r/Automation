@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace RfxComService
+namespace RfxCom
 {
     class Lighting5Protocol
     {
