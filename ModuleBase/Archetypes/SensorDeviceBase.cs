@@ -4,7 +4,7 @@ namespace ModuleBase.Archetypes
 {
     public abstract class SensorDeviceBase : DeviceBase
     {
-        protected class SensorState : DeviceBase.DeviceState
+        public class SensorState : DeviceBase.DeviceState
         {
             public SensorState()
             {}
@@ -16,9 +16,8 @@ namespace ModuleBase.Archetypes
             public new string Archetype { get { return "sensor"; } }
         }
 
-        public SensorDeviceBase(string name, DeviceCreationInfo creationInfo)
-        : base(new SensorState(), creationInfo)
+        public SensorDeviceBase(SensorState state, DeviceCreationInfo creationInfo)
+        : base(state, creationInfo)
         {}
-
     }
 }
