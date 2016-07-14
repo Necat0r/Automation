@@ -299,7 +299,7 @@ namespace RfxCom
             else if (packet.PacketType == Lighting2Protocol.PacketType)
             {
                 NexaEvent nexaEvent = Lighting2Protocol.HandlePackage(mDeviceManager, memory);
-                if (nexaEvent != null)
+                if (nexaEvent != null && nexaEvent.Device != null)
                 {
                     //Log.Debug("Dispatching Nexa event");
                     // Notify device
