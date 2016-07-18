@@ -45,6 +45,8 @@ namespace WebEndpoint
                 mQueryParameters = new string[] { };
             }
 
+            // TODO - Need to match types here as well!
+
             var methodParameters = method.GetParameters().ToDictionary(key => key.Name, value => value);
 
             var parameterCount = mUriParameters.Length + mQueryParameters.Length;
