@@ -125,8 +125,6 @@ namespace Automation
                 mMotionDoor.OnDeviceEvent += OnDoorSensor;
 
             mSwitchHallway = (NexaSensorDevice)deviceManager.GetDevice("switch_hallway");
-            if (mSwitchHallway != null)
-                mSwitchHallway.OnDeviceEvent += OnHallwaySwitch;
 
             // Presence devices
             mNexus5 = (BluetoothDevice)deviceManager.GetDevice("presence_nexus_5");
@@ -455,23 +453,6 @@ namespace Automation
                     if (mNexus5 != null)
                         mNexus5.CheckDevice();      // Trigger scan
                 }
-            }
-        }
-
-        private void OnHallwaySwitch(object sender, NexaEvent nexaEvent)
-        {
-            Log.Debug("Hallway switch");
-
-            if (nexaEvent.Value)
-            {
-                // Up position.
-                HomeScene();
-            }
-            else
-            {
-                // Down position.
-                
-                // TODO - Activate pending away mode
             }
         }
 
