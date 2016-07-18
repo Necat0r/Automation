@@ -145,6 +145,10 @@
 
         <button id="rec" onclick="startRecognize()">Start recognize</button>
         <br />
+        <button data-ng-click="speech.speak('hello world')">Speak: Hello world</button>
+        <br />
+        <button data-ng-click="speech.recognize('turn off the receiver')">Recognize: Turn off the receiver</button>
+        <br />
         <button data-ng-click="events.sendEvent('hello world', {Foo: 'bar'})">Send event</button>
      </div>
 
