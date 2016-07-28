@@ -11,6 +11,7 @@ using Logging;
 using System.IO;
 using System.Speech.AudioFormat;
 using NAudio.CoreAudioApi;
+using System.Globalization;
 
 namespace Speech
 {
@@ -43,6 +44,30 @@ namespace Speech
         : base("speech", info)
         {
             mVoice = new SpVoice();
+            
+            // Select voice
+            string voiceName;
+            info.Configuration.TryGetValue("voice", out voiceName);
+            if (!string.IsNullOrEmpty(voiceName))
+            {
+                SpObjectToken voiceToken = null;
+
+                CultureInfo culture = new CultureInfo("en-US");
+                foreach (var voice in mVoice.GetVoices())
+                {
+                    var token = voice as SpObjectToken;
+                    if (token == null)
+                        continue;
+
+                    if (culture.CompareInfo.IndexOf(token.Id, voiceName, CompareOptions.IgnoreCase) < 0)
+                        continue;
+
+                    voiceToken = token;
+                }
+
+                if (voiceToken != null)
+                    mVoice.Voice = voiceToken;
+            }
 
             mVoiceCommands = new Dictionary<string, DeviceBase.VoiceCommand>();
 
