@@ -1,8 +1,6 @@
 ﻿using Module;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.Serialization;
 
 namespace ModuleBase.Archetypes
 {
