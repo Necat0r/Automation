@@ -143,22 +143,21 @@ namespace Speech
 
                 while (!token.IsCancellationRequested)
                 {
+                    string newDeviceId = null;
                     try
                     {
-                        MMDevice endpoint = null;
                         try
                         {
-                            endpoint = enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console);
+                            MMDevice endpoint = enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console);
+                            newDeviceId = endpoint.ID;
                         }
                         catch
-                        {
-                            endpoint = null;
-                        }
+                        {}
 
                         // Default endpoint changed.
-                        if (mWaveIn != null && (deviceId != endpoint.ID || deviceId == null))
+                        if (mWaveIn != null && (newDeviceId != deviceId))
                         {
-                            deviceId = endpoint.ID;
+                            deviceId = newDeviceId;
 
                             // We've switched current default device
                             Log.Info("Input device changed.");
@@ -166,6 +165,8 @@ namespace Speech
                             mRecording = false;
                             DisposeWaveIn();
                         }
+
+                        deviceId = newDeviceId;
 
                         // On-demand create mWaveIn
                         if (mWaveIn == null && deviceId != null)
