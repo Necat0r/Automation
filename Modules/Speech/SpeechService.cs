@@ -69,6 +69,25 @@ namespace Speech
                     mVoice.Voice = voiceToken;
             }
 
+            // Select output. Why isn't this default any longer?
+            var enumerator = new MMDeviceEnumerator();
+            MMDevice endpoint = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+            if (endpoint != null)
+            {
+                foreach (var output in mVoice.GetAudioOutputs())
+                {
+                    var token = output as SpObjectToken;
+                    if (token == null)
+                        continue;
+
+                    if (token.Id.IndexOf(endpoint.ID) < 0)
+                        continue;
+
+                    mVoice.AudioOutput = token;
+                    break;
+                }
+            }
+            
             mVoiceCommands = new Dictionary<string, DeviceBase.VoiceCommand>();
 
             mInput = new AudioInput();
