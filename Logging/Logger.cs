@@ -6,7 +6,7 @@ namespace Logging
     public class Log
     {
         public static void Debug(string value)                        { InternalLog("DEBUG",   Assembly.GetCallingAssembly().GetName().Name, value); }
-        public static void Debug(string format, params object[] arg)  { InternalLog("DEBUG",   Assembly.GetCallingAssembly().GetName().Name, format, arg); }
+        public static void Debug(string value, params object[] arg)   { InternalLog("DEBUG",   Assembly.GetCallingAssembly().GetName().Name, value, arg); }
         public static void Info(string value)                         { InternalLog("INFO",    Assembly.GetCallingAssembly().GetName().Name, value); }
         public static void Info(string value, params object[] arg)    { InternalLog("INFO",    Assembly.GetCallingAssembly().GetName().Name, value, arg); }
         public static void Warning(string value)                      { InternalLog("WARNING", Assembly.GetCallingAssembly().GetName().Name, value); }
@@ -24,7 +24,9 @@ namespace Logging
 
         private static void InternalLog(string type, string callee, string format, params object[] arg)
         {
-            string text = arg != null ? string.Format(format, arg) : format;
+            string text = format;
+            if (arg.Length > 0)
+                text = arg != null ? string.Format(format, arg) : format;
 
             Console.WriteLine("{0} {1,-9} [{2,-12}]: {3}", DateTime.Now.ToString(), type, callee, text);
         }
