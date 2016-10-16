@@ -9,6 +9,11 @@ namespace Events
     {
         public class Event : EventArgs
         {
+            public Event()
+            {
+                Data = new Dictionary<string,string>();
+            }
+
             public string Name { get; set; }
             public Dictionary<string,string> Data { get; set; }
         }
@@ -22,6 +27,9 @@ namespace Events
         [ServicePutContract()]
         public void OnEventRequest(Event externalEvent)
         {
+            if (externalEvent == null)
+                return;
+
             Log.Info("Got event " + externalEvent.Name);
             if (OnEvent != null)
                 OnEvent(this, externalEvent);
