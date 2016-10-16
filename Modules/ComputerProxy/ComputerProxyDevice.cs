@@ -32,17 +32,26 @@ namespace ComputerProxy
 
         private class TimeoutWebClient : WebClient
         {
+            public TimeoutWebClient(int timeout)
+            {
+                mTimeout = timeout;
+            }
+
             protected override WebRequest GetWebRequest(Uri address)
             {
                 WebRequest w = base.GetWebRequest(address);
                 w.Timeout = 1000;
                 return w;
             }
+
+            private int mTimeout;
         }
 
         private WakeOnLanService mWakeService;
 
         private ComputerState State { get { return (ComputerState)mState; } }
+
+        private const int Timeout = 1000;
 
         public ComputerProxyDevice(DeviceCreationInfo creationInfo)
             : base(new ComputerState(), creationInfo)
@@ -93,12 +102,23 @@ namespace ComputerProxy
         {
             Task.Run(async () =>
             {
-                using (var client = new TimeoutWebClient())
+                using (var client = new TimeoutWebClient(Timeout))
                 {
                     try
                     {
                         string url = string.Format("http://{0}{1}", State.Address, uri);
-                        await client.UploadStringTaskAsync(url, "PUT", "");
+                        Log.Debug("Running web request: " + url);
+                        var task = client.UploadStringTaskAsync(url, "PUT", "");
+
+                        if (await Task.WhenAny(task, Task.Delay(Timeout)) == task)
+                        {
+                            await task;
+                            Log.Debug("Web request completed: " + url);
+                        }
+                        else
+                        {
+                            Log.Warning("Web request timed out: " + url);
+                        }
                     }
                     catch (Exception e)
                     {
