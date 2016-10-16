@@ -89,6 +89,8 @@ namespace Yamaha
             var commands = new List<VoiceCommand>();
             commands.Add(new VoiceCommand("turn on receiver", () => { SetPower(true); }));
             commands.Add(new VoiceCommand("turn off receiver", () => { SetPower(false); }));
+            commands.Add(new VoiceCommand("turn on the receiver", () => { SetPower(true); }));
+            commands.Add(new VoiceCommand("turn off the receiver", () => { SetPower(false); }));
             commands.Add(new VoiceCommand("raise volume", () => { SetVolume(State.Volume + VOLUME_CHANGE); }));
             commands.Add(new VoiceCommand("lower volume", () => { SetVolume(State.Volume - VOLUME_CHANGE); }));
             commands.Add(new VoiceCommand("mute", () => { Mute(!State.Mute); }));
