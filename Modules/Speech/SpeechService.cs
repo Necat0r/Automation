@@ -12,6 +12,8 @@ using System.IO;
 using System.Speech.AudioFormat;
 using NAudio.CoreAudioApi;
 using System.Globalization;
+using ModuleBase;
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace Speech
 {
@@ -40,14 +42,19 @@ namespace Speech
 
         private AudioInput mInput;
 
-        public SpeechService(string name, ServiceCreationInfo info)
+        public SpeechService(ServiceCreationInfo info)
         : base("speech", info)
         {
             mVoice = new SpVoice();
             
             // Select voice
-            string voiceName;
-            info.Configuration.TryGetValue("voice", out voiceName);
+            string voiceName = null;
+            try
+            {
+                voiceName = info.Configuration.Voice;
+            }
+            catch (RuntimeBinderException) {}
+
             if (!string.IsNullOrEmpty(voiceName))
             {
                 SpObjectToken voiceToken = null;

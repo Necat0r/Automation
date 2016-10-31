@@ -1,4 +1,5 @@
-﻿using Module;
+﻿using Microsoft.CSharp.RuntimeBinder;
+using Module;
 using System;
 using System.Collections.Generic;
 
@@ -6,13 +7,17 @@ namespace ModuleBase
 {
     public class ServiceFactory
     {
-        public static ServiceBase CreateService(string name, string typeName, Dictionary<string, string> settings, ServiceManager serviceManager, DeviceManager deviceManager)
+        public static ServiceBase CreateService(ServiceCreationInfo info)
         {
-            if (name == null || name.Length == 0)
-                throw new ArgumentException("Missing name on service");
-
-            if (typeName == null || typeName.Length == 0)
-                throw new ArgumentException("Missing type on service: " + name);
+            string typeName;
+            try
+            {
+                typeName = info.Configuration.type;
+            }
+            catch (RuntimeBinderException)
+            {
+                throw new ArgumentException("Missing type of service");
+            }
 
             Type serviceType = Type.GetType(typeName);
             if (serviceType == null)
@@ -21,8 +26,7 @@ namespace ModuleBase
             if (!serviceType.IsSubclassOf(typeof(ServiceBase)))
                 throw new ArgumentException("Service type is not a subclass of ServiceBase. Type: " + serviceType.Name);
 
-            ServiceCreationInfo into = new ServiceCreationInfo(settings, serviceManager, deviceManager);
-            Object[] arguments = new Object[] { name, into };
+            Object[] arguments = new Object[] { info };
 
             return (ServiceBase)Activator.CreateInstance(serviceType, arguments);
         }

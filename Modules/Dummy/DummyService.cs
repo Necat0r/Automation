@@ -9,7 +9,7 @@ namespace Dummy
 {
     public class DummyService : ServiceBase
     {
-        public DummyService(string name, ServiceCreationInfo info)
+        public DummyService(ServiceCreationInfo info)
             : base("dummy", info)
         { }
 

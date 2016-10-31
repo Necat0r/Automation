@@ -20,7 +20,7 @@ namespace Events
 
         public event EventHandler<Event> OnEvent;
 
-        public EventService(string name, ServiceCreationInfo info)
+        public EventService(ServiceCreationInfo info)
             : base("events", info)
         {}
 

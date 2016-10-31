@@ -9,8 +9,8 @@ namespace ArduinoLamps
 {
     public abstract class LampServiceBase : ServiceBase
     {
-        public LampServiceBase(string name, ServiceCreationInfo info)
-            : base(name, info)
+        public LampServiceBase(ServiceCreationInfo info)
+            : base(info)
         {
         }
 

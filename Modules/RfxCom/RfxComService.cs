@@ -53,7 +53,7 @@ namespace RfxCom
 
         public event EventHandler<EverflourishEvent> OnEverflourishEvent;
 
-        public RfxComService(string name, ServiceCreationInfo info)
+        public RfxComService(ServiceCreationInfo info)
             : base ("rfxcom", info)
         {
             mDeviceManager = info.DeviceManager;

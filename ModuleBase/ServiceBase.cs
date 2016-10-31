@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.CSharp.RuntimeBinder;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Module
 {
@@ -55,6 +53,28 @@ namespace Module
 
         public ServiceBase(string name, ServiceCreationInfo info)
         {
+            if (name == null || name.Length == 0)
+                throw new ArgumentException("Missing name on service");
+
+            mName = name;
+        }
+
+
+        public ServiceBase(ServiceCreationInfo info)
+        {
+            string name;
+            try
+            {
+                name = info.Configuration.Name;
+            }
+            catch (RuntimeBinderException)
+            {
+                throw new ArgumentException("Missing name of service");
+            }
+
+            if (name.Length == 0)
+                throw new ArgumentException("Missing name on service");
+
             mName = name;
         }
 

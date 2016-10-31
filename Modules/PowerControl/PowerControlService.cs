@@ -13,7 +13,7 @@ namespace PowerControl
         private IntPtr ON = new IntPtr(-1);
         private IntPtr OFF = new IntPtr(2);
 
-        public PowerControlService(string name, ServiceCreationInfo info)
+        public PowerControlService(ServiceCreationInfo info)
             : base("power", info)
         { }
 

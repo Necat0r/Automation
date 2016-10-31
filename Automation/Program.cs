@@ -6,6 +6,7 @@ using Support;
 using System.IO;
 using System.Collections.Generic;
 using Logging;
+using ModuleBase;
 
 namespace Automation
 {
@@ -37,13 +38,81 @@ namespace Automation
             if (config.ContainsKey("port"))
                 mPort = UInt16.Parse(config["port"]);
 
-            // TODO - Settings shouldn't be responsible to create these. Get device configs and then let DeviceFactory create each instance.
-            settings.CreateServices(mServiceManager, mDeviceManager);
-            settings.CreateDevices(mServiceManager, mDeviceManager);
+            // Create services
+            var serviceConfigs = settings.GetServiceConfigs();
+            CreateServices(serviceConfigs);
+
+            // Create devices
+            var deviceConfigs = settings.GetDeviceConfigs();
+            CreateDevices(deviceConfigs);
 
             mLogic = new Logic(mDeviceManager, mServiceManager);
 
 
+            InitSpeechCommands();
+
+            // createStatusWindow
+
+            startWebEndpoint();
+
+            StartUIThread();
+        }
+
+        public void CreateServices(List<dynamic> configs)
+        {
+            foreach (var serviceConfig in configs)
+            {
+                ServiceBase service;
+                try
+                {
+                    ServiceCreationInfo info = new ServiceCreationInfo(serviceConfig, mServiceManager, mDeviceManager);
+
+                    service = ServiceFactory.CreateService(info);
+                    mServiceManager.AddService(service);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Failed creating service for node: " + serviceConfig.Name);
+                    if (e.InnerException != null)
+                        Log.Error("Inner Exception: {0}\nCallstack:\n{1}", e.InnerException.Message, e.InnerException.StackTrace);
+                    else
+                        Log.Error("Exception: {0}\nCallstack:\n{1}", e.Message, e.StackTrace);
+
+                    continue;
+                }
+
+                Log.Info("Created service: {0} of type: {1}", service.Name, service.GetType().ToString());
+            }
+        }
+
+        public void CreateDevices(List<dynamic> configs)
+        {
+            foreach (var deviceConfig in configs)
+            {
+                DeviceBase device;
+                try
+                {
+                    DeviceCreationInfo info = new DeviceCreationInfo(deviceConfig, mServiceManager, mDeviceManager);
+                    device = DeviceFactory.CreateDevice(info);
+                    mDeviceManager.AddDevice(device);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Failed creating device for node with config: " + deviceConfig.name);
+                    if (e.InnerException != null)
+                        Log.Error("Inner Exception: {0}\nCallstack:\n{1}", e.InnerException.Message, e.InnerException.StackTrace);
+                    else
+                        Log.Error("Exception: {0}\nCallstack:\n{1}", e.Message, e.StackTrace);
+
+                    continue;
+                }
+
+                Log.Info("Created device: {0} of type: {1}", device.Name, device.GetType().ToString());
+            }
+        }
+
+        public void InitSpeechCommands()
+        {
             // TODO - Hackish... just make speech part of the system? Or just dispatch to all services once we've created all devices & services
             var speechService = (Speech.SpeechService)mServiceManager.GetService(typeof(Speech.SpeechService));
             if (speechService != null)
@@ -59,12 +128,6 @@ namespace Automation
 
                 speechService.LoadCommands(allCommands);
             }
-
-            // createStatusWindow
-
-            startWebEndpoint();
-
-            StartUIThread();
         }
 
         public void Dispose()

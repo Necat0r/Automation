@@ -13,7 +13,7 @@ namespace DeviceBaseTest
             settings.name = "ProperDeviceName";
             settings.displayName = "ProperDisplayName";
 
-            return new Module.DeviceCreationInfo(settings, new Module.DeviceManager(), new Module.ServiceManager());
+            return new Module.DeviceCreationInfo(settings, new Module.ServiceManager(), new Module.DeviceManager());
         }
 
         public class TestDevice : DeviceBase

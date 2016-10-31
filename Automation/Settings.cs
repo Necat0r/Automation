@@ -17,13 +17,13 @@ namespace Automation
         //<settings>
         //    <services>
         //        <service name="dummy" dll="dummy.dll">
-        //            <value name="active">4</value>
-        //            <value name="port">4</value>
+        //            <active">4</active>
+        //            <port>4</port>
         //        </service>
         //    </services>
         //    <devices>
         //        <device name="lamp_bedroom" type="RfxCom.Lighting5">
-        //            <value name="code">12345678</value>
+        //            <code>12345678</code>
         //        </device>
         //    </devices>
         //</settings>
@@ -131,66 +131,30 @@ namespace Automation
             return values;
         }
 
-        public void CreateServices(ServiceManager serviceManager, DeviceManager deviceManager)
+        public List<dynamic> GetServiceConfigs()
         {
+            var configs = new List<dynamic>();
+
             XmlNodeList serviceNodeList = mDocument.SelectNodes("settings/services/service");
             foreach (XmlNode serviceNode in serviceNodeList)
             {
-                XmlAttributeCollection attributes = serviceNode.Attributes;
-
-                XmlAttribute name = attributes["name"];
-                XmlAttribute type = attributes["type"];
-                var values = GetValues(serviceNode);
-
-                try
-                {
-                    var service = ServiceFactory.CreateService(name != null ? name.Value : "", type != null ? type.Value : "", values, serviceManager, deviceManager);
-                    serviceManager.AddService(service);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Failed creating service for node: " + serviceNode.OuterXml);
-                    if (e.InnerException != null)
-                        Log.Error("Inner Exception: {0}\nCallstack:\n{1}", e.InnerException.Message, e.InnerException.StackTrace);
-                    else
-                        Log.Error("Exception: {0}\nCallstack:\n{1}", e.Message, e.StackTrace);
-
-                    continue;
-                }
-
-                Log.Info("Created service: {0} of type: {1}", name.Value, type.Value);
+                configs.Add(LoadSettingsObject(serviceNode));
             }
+
+            return configs;
         }
 
-        public void CreateDevices(ServiceManager serviceManager, DeviceManager deviceManager)
+        public List<dynamic> GetDeviceConfigs()
         {
+            var configs = new List<dynamic>();
+
             XmlNodeList deviceNodeList = mDocument.SelectNodes("settings/devices/device");
             foreach (XmlNode deviceNode in deviceNodeList)
             {
-                XmlAttributeCollection attributes = deviceNode.Attributes;
-
-                dynamic configuration = LoadSettingsObject(deviceNode);
-
-                DeviceBase device;
-                try
-                {
-                    device = DeviceFactory.CreateDevice(configuration, serviceManager, deviceManager);
-                    //var device = (DeviceBase)Activator.CreateInstance(deviceType, arguments);
-                    deviceManager.AddDevice(device);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Failed creating device for node: " + deviceNode.OuterXml);
-                    if (e.InnerException != null)
-                        Log.Error("Inner Exception: {0}\nCallstack:\n{1}", e.InnerException.Message, e.InnerException.StackTrace);
-                    else
-                        Log.Error("Exception: {0}\nCallstack:\n{1}", e.Message, e.StackTrace);
-
-                    continue;
-                }
-
-                Log.Info("Created device: {0} of type: {1}", device.Name, device.GetType().ToString());
+                configs.Add(LoadSettingsObject(deviceNode));
             }
+
+            return configs;
         }
     }
 }

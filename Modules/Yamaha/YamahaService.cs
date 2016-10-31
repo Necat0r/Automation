@@ -3,22 +3,15 @@ using Module;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-
 using System.Linq;
-//using System.Data.Linq;
-//using System.Data.Entity;
-
 
 namespace Yamaha
 {
     public class YamahaService : ServiceBase
     {
-        //private IPAddress mAddress;
-        private const string CONTROL_URI = "/YamahaRemoteControl/ctrl";
+       private const string CONTROL_URI = "/YamahaRemoteControl/ctrl";
 
         private const int REFRESH_INTERVAL = 5000;
         private const string REQUEST_PARAMETERS = "<YAMAHA_AV cmd=\"GET\"><System><Config>GetParam</Config></System></YAMAHA_AV>";
@@ -26,7 +19,7 @@ namespace Yamaha
 
         private HashSet<YamahaDevice> mDevices;
 
-        public YamahaService(string name, ServiceCreationInfo info)
+        public YamahaService(ServiceCreationInfo info)
             : base("yamaha", info)
         {
             mDevices = new HashSet<YamahaDevice>();

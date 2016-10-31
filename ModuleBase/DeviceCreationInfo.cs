@@ -8,11 +8,11 @@ namespace Module
         public DeviceManager DeviceManager;
         public ServiceManager ServiceManager;
 
-        public DeviceCreationInfo(dynamic configuation, DeviceManager deviceManager, ServiceManager serviceManager)
+        public DeviceCreationInfo(dynamic configuation, ServiceManager serviceManager, DeviceManager deviceManager)
         {
             this.Configuration = configuation;
-            this.DeviceManager = deviceManager;
             this.ServiceManager = serviceManager;
+            this.DeviceManager = deviceManager;
         }
     }
 }

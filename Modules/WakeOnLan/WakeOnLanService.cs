@@ -8,7 +8,7 @@ namespace WakeOnLan
 {
     public class WakeOnLanService : ServiceBase
     {
-        public WakeOnLanService(string name, ServiceCreationInfo info)
+        public WakeOnLanService(ServiceCreationInfo info)
             : base("wake", info)
         { }
 

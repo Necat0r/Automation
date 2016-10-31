@@ -9,8 +9,8 @@ namespace ArduinoLamps
 
         private SerialHelper mSerialHelper;
 
-        public LampService(string name, ServiceCreationInfo info)
-            : base(name, info)
+        public LampService(ServiceCreationInfo info)
+            : base(info)
         {
             uint port = uint.Parse(info.Configuration["port"]);
 

@@ -6,12 +6,12 @@ namespace ModuleBase
 {
     public class DeviceFactory
     {
-        public static DeviceBase CreateDevice(dynamic configuration, ServiceManager serviceManager, DeviceManager deviceManager)
+        public static DeviceBase CreateDevice(DeviceCreationInfo info)
         {
             string type;
             try
             {
-                type = configuration.type;
+                type = info.Configuration.type;
             }
             catch (RuntimeBinderException)
             {
@@ -25,7 +25,6 @@ namespace ModuleBase
             if (!deviceType.IsSubclassOf(typeof(DeviceBase)))
                 throw new ArgumentException("Type is not a subclass of DeviceBase. Type: " + deviceType.Name);
 
-            DeviceCreationInfo info = new DeviceCreationInfo(configuration, deviceManager, serviceManager);
             Object[] arguments = new Object[] { info };
 
             return (DeviceBase)Activator.CreateInstance(deviceType, arguments);

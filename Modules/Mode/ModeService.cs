@@ -34,7 +34,7 @@ namespace Mode
 
         private Mode mMode;
 
-        public ModeService(string name, ServiceCreationInfo info)
+        public ModeService(ServiceCreationInfo info)
             : base("mode", info)
         {
 

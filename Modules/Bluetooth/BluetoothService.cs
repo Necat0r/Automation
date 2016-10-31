@@ -92,7 +92,7 @@ namespace Bluetooth
             }
         }
 
-        public BluetoothService(string name, ServiceCreationInfo info)
+        public BluetoothService(ServiceCreationInfo info)
             : base("bluetooth", info)
         {
             mBluetooth = new BluetoothHelper();

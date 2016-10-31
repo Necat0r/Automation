@@ -1,5 +1,6 @@
 ﻿using Events;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ModuleBase;
 using ModuleBaseTest;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,12 @@ namespace ModulesTest
         private EventService CreateEventService()
         {
             var util = new TestUtil();
-            string name = "EventService";
-            string type = typeof(EventService).AssemblyQualifiedName;
 
-            var serviceConfiguration = new Dictionary<string, string>();
+            dynamic config = new SettingsObject();
+            config.Name = "EventService";
+            config.Type = typeof(EventService).AssemblyQualifiedName;
 
-            return (EventService) util.CreateService(name, type, serviceConfiguration);
+            return (EventService) util.CreateService(config);
         }
 
         private EventService.Event CreateTestEvent()

@@ -18,16 +18,18 @@ namespace ModuleBaseTest
 
         public DeviceBase CreateDevice(dynamic deviceConfiguration)
         {
-            var device = DeviceFactory.CreateDevice(deviceConfiguration, ServiceManager, DeviceManager);
+            var info = new DeviceCreationInfo(deviceConfiguration, ServiceManager, DeviceManager);
+            var device = DeviceFactory.CreateDevice(info);
 
             DeviceManager.AddDevice(device);
 
             return device;
         }
 
-        public ServiceBase CreateService(string name, string type, Dictionary<string, string> configuration)
+        public ServiceBase CreateService(dynamic configuration)
         {
-            var service = ServiceFactory.CreateService(name, type, configuration, ServiceManager, DeviceManager);
+            var info = new ServiceCreationInfo(configuration, ServiceManager, DeviceManager);
+            var service = ServiceFactory.CreateService(info);
 
             ServiceManager.AddService(service);
 

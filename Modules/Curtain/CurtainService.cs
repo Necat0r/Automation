@@ -14,10 +14,10 @@ namespace Curtain
 
         private const int TransmissionDuration = 200;
 
-        public CurtainService(string name, ServiceCreationInfo info)
+        public CurtainService(ServiceCreationInfo info)
             : base("curtain", info)
         {
-            uint port = uint.Parse(info.Configuration["port"]);
+            uint port = uint.Parse(info.Configuration.port);
 
             mSerialHelper = SerialRepository.OpenPort("arduino", port, 115200);
             //mSerialHelper = new SerialHelper("curtain", (uint)port, 115200);

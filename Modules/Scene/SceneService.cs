@@ -8,7 +8,7 @@ namespace Scene
     {
         public event EventHandler<SceneEvent> OnSceneEvent;
 
-        public SceneService(string name, ServiceCreationInfo info)
+        public SceneService(ServiceCreationInfo info)
             : base("scene", info)
         {
         }

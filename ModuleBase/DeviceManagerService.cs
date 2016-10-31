@@ -64,7 +64,7 @@ device/status/<deviceName>
     {
         private DeviceManager mDeviceManager;
 
-        public DeviceManagerService(string name, ServiceCreationInfo info)
+        public DeviceManagerService(ServiceCreationInfo info)
             : base("device", info)
         {
             mDeviceManager = info.DeviceManager;

@@ -1,6 +1,7 @@
 ﻿using ArduinoLamps;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Module;
+using ModuleBase;
 using ModuleBaseTest;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace ModulesTest
     {
         private class LampServiceMock : LampServiceBase
         {
-            public LampServiceMock(string name, ServiceCreationInfo info)
-                : base("LampTest", info)
+            public LampServiceMock(ServiceCreationInfo info)
+                : base(info)
             {
                 SetLevelCalled = false;
                 Level = 0.0f;
@@ -34,11 +35,10 @@ namespace ModulesTest
         {
             var util = new TestUtil();
 
-            string name = "LampTest";
-            string type = typeof(LampServiceMock).AssemblyQualifiedName;
-
-            var serviceConfiguration = new Dictionary<string, string>();
-            util.CreateService(name, type, serviceConfiguration);
+            dynamic config = new SettingsObject();
+            config.Name = "LampTest";
+            config.Type = typeof(LampServiceMock).AssemblyQualifiedName;
+            util.CreateService(config);
 
             var deviceConfiguration = GetDeviceConfiguration();
 

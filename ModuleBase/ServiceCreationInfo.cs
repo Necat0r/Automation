@@ -8,11 +8,11 @@ namespace Module
 {
     public class ServiceCreationInfo
     {
-        public Dictionary<string, string> Configuration;
+        public dynamic Configuration;
         public ServiceManager ServiceManager;
         public DeviceManager DeviceManager;
 
-        public ServiceCreationInfo(Dictionary<string, string> configuation, ServiceManager serviceManager, DeviceManager deviceManager)
+        public ServiceCreationInfo(dynamic configuation, ServiceManager serviceManager, DeviceManager deviceManager)
         {
             this.Configuration = configuation;
             this.ServiceManager = serviceManager;
