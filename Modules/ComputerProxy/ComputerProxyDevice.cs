@@ -30,23 +30,6 @@ namespace ComputerProxy
             public new string Archetype { get { return "desktop"; } }
         };
 
-        private class TimeoutWebClient : WebClient
-        {
-            public TimeoutWebClient(int timeout)
-            {
-                mTimeout = timeout;
-            }
-
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                WebRequest w = base.GetWebRequest(address);
-                w.Timeout = 1000;
-                return w;
-            }
-
-            private int mTimeout;
-        }
-
         private WakeOnLanService mWakeService;
 
         private ComputerState State { get { return (ComputerState)mState; } }
@@ -100,30 +83,25 @@ namespace ComputerProxy
 
         private void RunRequest(string uri)
         {
-            Task.Run(async () =>
+            Task.Run(() =>
             {
-                using (var client = new TimeoutWebClient(Timeout))
+                try
                 {
-                    try
-                    {
-                        string url = string.Format("http://{0}{1}", State.Address, uri);
-                        Log.Debug("Running web request: " + url);
-                        var task = client.UploadStringTaskAsync(url, "PUT", "");
+                    string url = string.Format("http://{0}{1}", State.Address, uri);
+                    Log.Debug("Running web request: " + url);
 
-                        if (await Task.WhenAny(task, Task.Delay(Timeout)) == task)
-                        {
-                            await task;
-                            Log.Debug("Web request completed: " + url);
-                        }
-                        else
-                        {
-                            Log.Warning("Web request timed out: " + url);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Warning("Request failed with error: " + e.Message);
-                    }
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "PUT";
+                    request.Timeout = 1000;
+                    request.ReadWriteTimeout = 1000;
+                    request.ContentLength = 0;
+                    request.GetResponse();
+
+                    Log.Debug("Web request completed: " + url);
+                }
+                catch (Exception e)
+                {
+                    Log.Warning("Request failed with error: " + e.Message);
                 }
             });
         }
