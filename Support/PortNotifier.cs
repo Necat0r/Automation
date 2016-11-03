@@ -25,7 +25,7 @@ namespace Support
         private sealed class MessageWindow : NativeWindow
         {
             const int WM_DEVICECHANGE = 0x219;
-            const int DBT_DEVICEARRIVAL = 0x8000;
+            IntPtr DBT_DEVICEARRIVAL = (IntPtr)0x8000;
             const int DBT_DEVTYP_PORT = 0x03;
 
             public MessageWindow()
@@ -37,7 +37,7 @@ namespace Support
             [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
             protected override void WndProc(ref Message m)
             {
-                int changeType = (int)m.WParam;
+                IntPtr changeType = (IntPtr)m.WParam;
                 if (m.Msg == WM_DEVICECHANGE)
                 {
                     if (changeType == DBT_DEVICEARRIVAL)
