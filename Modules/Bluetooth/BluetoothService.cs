@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Bluetooth
 {
-    public class BluetoothService : ServiceBase, IDisposable
+    public class BluetoothService : ServiceBase
     {
         private TimeSpan AWAY_TIMEOUT = new TimeSpan(1, 0, 0);
         private TimeSpan SCAN_INTERVAL_AWAY = new TimeSpan(0, 0, 20);
@@ -49,7 +49,14 @@ namespace Bluetooth
 
             public void Dispose()
             {
-                NativeMethods.bt_shutdown();
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (disposing)
+                    NativeMethods.bt_shutdown();
             }
 
             public string[] GetDevices()
@@ -108,20 +115,36 @@ namespace Bluetooth
             mThread.Start();
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            // Shut down thread
-            if (mThread != null)
+            if (disposing)
             {
                 mRunning = false;
-                mStopEvent.Set();
-                mThread.Join(10000);
-                mThread = null;
+
+                if (mStopEvent != null)
+                    mStopEvent.Set();
+
+                // Shut down thread
+                if (mThread != null)
+                {
+                    mThread.Join(10000);
+                    mThread = null;
+                }
+
+                if (mDeviceEvent != null)
+                    mDeviceEvent.Dispose();
+                mDeviceEvent = null;
+
+                if (mStopEvent != null)
+                    mStopEvent.Dispose();
+                mStopEvent = null;
+
+                if (mBluetooth != null)
+                    mBluetooth.Dispose();
+                mBluetooth = null;
             }
 
-            mDeviceEvent.Dispose();
-            mStopEvent.Dispose();
-            mBluetooth.Dispose();
+            base.Dispose(disposing);
         }
 
         private void _searchThread()

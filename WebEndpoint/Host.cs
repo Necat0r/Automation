@@ -68,13 +68,22 @@
 
         public void Dispose()
         {
-            mHost.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        ~Host()
+        protected virtual void Dispose(bool disposing)
         {
-            mHost.Stop();
-            mHost.Dispose();
+            if (disposing)
+            {
+                if (mHost != null)
+                {
+                    mHost.Stop();
+                    mHost.Dispose();
+                }
+                mHost = null;
+            }
+
         }
 
         public void Stop()

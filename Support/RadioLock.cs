@@ -44,7 +44,18 @@ namespace Support
 
         public void Dispose()
         {
-            mReleaseEvent.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (mReleaseEvent != null)
+                    mReleaseEvent.Dispose();
+                mReleaseEvent = null;
+            }
         }
 
         public static RadioLock Instance

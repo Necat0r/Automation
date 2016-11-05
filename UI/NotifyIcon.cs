@@ -54,7 +54,18 @@ namespace UI
 
         public void Dispose()
         {
-            notifyIcon.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (notifyIcon != null)
+                    notifyIcon.Dispose();
+                notifyIcon = null;
+            }
         }
 
         public void SetStatus(string status)

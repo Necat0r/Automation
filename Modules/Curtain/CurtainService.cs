@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Curtain
 {
-    public class CurtainService : ServiceBase, IDisposable
+    public class CurtainService : ServiceBase
     {
         private SerialHelper mSerialHelper;
         private RadioLock mRadioLock;
@@ -20,15 +20,20 @@ namespace Curtain
             uint port = uint.Parse(info.Configuration.port);
 
             mSerialHelper = SerialRepository.OpenPort("arduino", port, 115200);
-            //mSerialHelper = new SerialHelper("curtain", (uint)port, 115200);
             mRadioLock = RadioLock.Instance;
 
             mLock = new Object();
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            mSerialHelper.Dispose();
+            if (mSerialHelper != null)
+            {
+                mSerialHelper.Dispose();
+                mSerialHelper = null;
+            }
+
+            base.Dispose(disposing);
         }
 
         async public void SendData(byte[] data)

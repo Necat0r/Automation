@@ -14,7 +14,7 @@ namespace RfxCom
         private RadioLock mRadioLock;
         private bool mLockOwned;
 
-        bool mRunning = true;
+        private volatile bool mRunning = true;
         private Thread mRfxThread;
         private AutoResetEvent mActionEvent = new AutoResetEvent(false);
         private AutoResetEvent mSerialEvent = new AutoResetEvent(false);
@@ -53,6 +53,8 @@ namespace RfxCom
 
         public event EventHandler<EverflourishEvent> OnEverflourishEvent;
 
+        private bool mDisposed = false;
+
         public RfxComService(ServiceCreationInfo info)
             : base ("rfxcom", info)
         {
@@ -68,16 +70,32 @@ namespace RfxCom
             mRfxThread.Start();
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            mRunning = false;
-            mStopEvent.Set();
-            mRfxThread.Join();
+            if (disposing && !mDisposed)
+            {
+                mDisposed = true;
+                mRunning = false;
 
-            mSerialHelper.Dispose();
-            mActionEvent.Dispose();
-            mSerialEvent.Dispose();
-            mStopEvent.Dispose();
+                mStopEvent.Set();
+
+                mRfxThread.Join();
+                mRfxThread = null;
+
+                mSerialHelper.Dispose();
+                mSerialHelper = null;
+
+                mActionEvent.Dispose();
+                mActionEvent = null;
+
+                mSerialEvent.Dispose();
+                mSerialEvent = null;
+
+                mStopEvent.Dispose();
+                mStopEvent = null;
+            }
+
+            base.Dispose(disposing);
         }
 
         public bool SwitchDevice(DeviceBase device, bool value)

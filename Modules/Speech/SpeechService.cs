@@ -3,21 +3,16 @@ using Module;
 using System;
 using System.Speech.Recognition;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using NAudio;
-using NAudio.Wave;
 using Logging;
-using System.IO;
 using System.Speech.AudioFormat;
 using NAudio.CoreAudioApi;
 using System.Globalization;
-using ModuleBase;
 using Microsoft.CSharp.RuntimeBinder;
 
 namespace Speech
 {
-    public class SpeechService : ServiceBase, IDisposable
+    public class SpeechService : ServiceBase
     {
         public class RecognizeEvent
         {
@@ -113,10 +108,20 @@ namespace Speech
             mRecognizer.RecognizeAsync(RecognizeMode.Multiple);
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            mRecognizer.Dispose();
-            mInput.Dispose();            
+            if (disposing)
+            {
+                if (mRecognizer != null)
+                    mRecognizer.Dispose();
+                mRecognizer = null;
+
+                if (mInput != null)
+                    mInput.Dispose();
+                mInput = null;
+            }
+            
+            base.Dispose(disposing);
         }
 
         public void LoadCommands(IList<DeviceBase.VoiceCommand> commands)

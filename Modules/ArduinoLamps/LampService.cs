@@ -10,11 +10,23 @@ namespace ArduinoLamps
         private SerialHelper mSerialHelper;
 
         public LampService(ServiceCreationInfo info)
-            : base(info)
+        : base(info)
         {
             uint port = uint.Parse(info.Configuration["port"]);
 
             mSerialHelper = SerialRepository.OpenPort("arduino", port, 115200);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (mSerialHelper != null)
+                    mSerialHelper.Dispose();
+                mSerialHelper = null;
+            }
+            
+            base.Dispose(disposing);
         }
 
         public override void SetLevel(LampDevice lampDevice, float level)

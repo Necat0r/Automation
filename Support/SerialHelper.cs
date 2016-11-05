@@ -87,6 +87,8 @@ namespace Support
             }
         }
 
+        private bool mDisposed = false;
+
         public SerialHelper(string name, uint port, uint baudrate)
         {
             mEvents = new EventWaitHandle[] { mPortEvent, mStopEvent };
@@ -105,19 +107,35 @@ namespace Support
 
         public void Dispose()
         {
-            mPortEvent.Dispose();
-            mStopEvent.Dispose();
-            mSerial.Dispose();
-        }
-        
-        ~SerialHelper()
-        {
-            PortNotifier.PortAdded -= new EventHandler<PortNotifier.PortAddedEventArgs>(PortAdded);
-            mRunning = false;
-            mStopEvent.Set();
-            mReadThread.Join();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && !mDisposed)
+            {
+                mDisposed = true;
+
+                PortNotifier.PortAdded -= new EventHandler<PortNotifier.PortAddedEventArgs>(PortAdded);
+
+                mRunning = false;
+                mStopEvent.Set();
+
+                mReadThread.Join();
+                mReadThread = null;
+
+                mPortEvent.Dispose();
+                mPortEvent = null;
+
+                mStopEvent.Dispose();
+                mStopEvent = null;
+
+                mSerial.Dispose();
+                mSerial = null;
+            }
+        }
+       
         public void AddListener(SerialListener listener)
         {
             mListeners.Add(listener);
