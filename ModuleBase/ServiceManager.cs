@@ -6,13 +6,31 @@ using System.Threading.Tasks;
 
 namespace Module
 {
-    public class ServiceManager
+    public class ServiceManager : IDisposable
     {
         private List<ServiceBase> mServices;
 
         public ServiceManager()
         {
             mServices = new List<ServiceBase>();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach(var service in mServices)
+                {
+                    service.Dispose();
+                }
+                mServices.Clear();
+            }
         }
 
         public void AddService(ServiceBase service)

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Module
 {
-    public class ServiceBase
+    public class ServiceBase : IDisposable
     {
         [Serializable]
         public class RequestException : Exception
@@ -78,9 +78,19 @@ namespace Module
             mName = name;
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {}
+
         public string Name
         {
             get { return mName; }
         }
+
     }
 }

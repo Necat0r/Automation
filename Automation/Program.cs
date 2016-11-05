@@ -132,9 +132,30 @@ namespace Automation
 
         public void Dispose()
         {
-            mApplicationContext.Dispose();
-            mWebHost.Dispose();
-            mNotifyIcon.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (mServiceManager != null)
+                    mServiceManager.Dispose();
+                mServiceManager = null;
+
+                if (mApplicationContext != null)
+                    mApplicationContext.Dispose();
+                mApplicationContext = null;
+
+                if (mWebHost != null)
+                    mWebHost.Dispose();
+                mWebHost = null;
+
+                if (mNotifyIcon != null)
+                    mNotifyIcon.Dispose();
+                mNotifyIcon = null;
+            }
         }
 
         private void StartUIThread()
