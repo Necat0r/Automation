@@ -58,7 +58,7 @@ namespace Automation
             StartUIThread();
         }
 
-        public void CreateServices(List<dynamic> configs)
+        private void CreateServices(List<dynamic> configs)
         {
             foreach (var serviceConfig in configs)
             {
@@ -85,7 +85,7 @@ namespace Automation
             }
         }
 
-        public void CreateDevices(List<dynamic> configs)
+        private void CreateDevices(List<dynamic> configs)
         {
             foreach (var deviceConfig in configs)
             {
@@ -111,7 +111,7 @@ namespace Automation
             }
         }
 
-        public void InitSpeechCommands()
+        private void InitSpeechCommands()
         {
             // TODO - Hackish... just make speech part of the system? Or just dispatch to all services once we've created all devices & services
             var speechService = (Speech.SpeechService)mServiceManager.GetService(typeof(Speech.SpeechService));
