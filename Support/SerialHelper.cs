@@ -32,7 +32,14 @@ namespace Support
 
         public event EventHandler<EventArgs> OnConnected;
         public event EventHandler<EventArgs> OnDisconnected;
-        public event EventHandler<byte[]> OnDataReceived;
+
+        public sealed class DataReceivedEventArgs : EventArgs
+        {
+            public byte[] Data { get; private set; }
+            public DataReceivedEventArgs(byte[] data) { Data = data; }
+        }
+
+        public event EventHandler<DataReceivedEventArgs> OnDataReceived;
 
         public interface SerialListener
         {
@@ -268,7 +275,7 @@ namespace Support
                         listener.OnData(data);
 
                     if (OnDataReceived != null)
-                        OnDataReceived(this, data);
+                        OnDataReceived(this, new DataReceivedEventArgs(data));
                 }
             }
 
