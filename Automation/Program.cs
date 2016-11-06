@@ -284,6 +284,7 @@ namespace Automation
             }
 
             Log.Info("Program stopped");
+            Environment.Exit(0);
         }
     }
 }
