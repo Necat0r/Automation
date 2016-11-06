@@ -18,7 +18,7 @@ namespace Logging
 
         public static void Exception(Exception e)
         {
-            InternalLog("EXCEPTION", Assembly.GetCallingAssembly().GetName().Name, "Exception thrown: " + e.Message);
+            InternalLog("EXCEPTION", Assembly.GetCallingAssembly().GetName().Name, e.GetType().ToString() + " exception  thrown: " + e.Message);
             Console.WriteLine(e.StackTrace);
         }
 
