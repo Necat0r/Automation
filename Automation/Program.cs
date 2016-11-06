@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using System.Threading;
 using Module;
 using Support;
-using System.IO;
 using System.Collections.Generic;
 using Logging;
 using ModuleBase;
@@ -46,8 +45,10 @@ namespace Automation
             var deviceConfigs = settings.GetDeviceConfigs();
             CreateDevices(deviceConfigs);
 
-            mLogic = new Logic(mDeviceManager, mServiceManager);
+            Log.Info("Number of services: " + mServiceManager.Services.Count);
+            Log.Info("Number of devices: " + mDeviceManager.Devices.Count);
 
+            mLogic = new Logic(mDeviceManager, mServiceManager);
 
             InitSpeechCommands();
 
@@ -221,6 +222,8 @@ namespace Automation
                 Thread.Sleep(1000);
             }
 
+            Log.Info("Program stopping");
+
             JoinUIThread();
         }
 
@@ -279,6 +282,8 @@ namespace Automation
 
                 throw;
             }
+
+            Log.Info("Program stopped");
         }
     }
 }
