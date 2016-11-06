@@ -38,6 +38,12 @@ namespace Curtain
 
         async public void SendData(byte[] data)
         {
+            if (mSerialHelper == null)
+            {
+                Log.Error("No SerialHelper available");
+                return;
+            }
+
             // Early out in case we're not connected yet.
             if (!mSerialHelper.IsConnected)
             {
