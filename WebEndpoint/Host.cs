@@ -2,10 +2,9 @@
 {
     using System;
     using Nancy.Hosting.Self;
-    using Microsoft.AspNet.SignalR;
     using Owin;
-    using Microsoft.Owin.Hosting;
     using Logging;
+    using System.Threading.Tasks;
 
     public class Host : IDisposable
     {
@@ -28,27 +27,46 @@
 
             mHost = new NancyHost(bootstrapper, uri);
 
-            try
+            Task.Run(async () =>
             {
-                mHost.Start();
-            }
-            catch (Nancy.Hosting.Self.AutomaticUrlReservationCreationFailureException)
-            {
-                // Need to add acl for that address.
-                // netsh http add urlacl url=http://+:<port>/automation/ user=<machine>\<user>
-                Log.Fatal("Probably an ACL issue.\nRun the following in an elevated command prompt:\nnetsh http add urlacl url=http://+:" + port + "/ user=<machine>\\<user>");
+                int remainingAttempts = 5;
 
-                /*
-                netsh http add urlacl url=https://+:4443/ user=<your user name>”
+                while (true)
+                {
+                    try
+                    {
+                        mHost.Start();
+                        break;
+                    }
+                    catch (Nancy.Hosting.Self.AutomaticUrlReservationCreationFailureException)
+                    {
+                        // Need to add acl for that address.
+                        // netsh http add urlacl url=http://+:<port>/automation/ user=<machine>\<user>
+                        Log.Fatal("Probably an ACL issue.\nRun the following in an elevated command prompt:\nnetsh http add urlacl url=http://+:" + port + "/ user=<machine>\\<user>");
 
-                netsh http add sslcert ipport=0.0.0.0:4443 certhash=thumbprint appid={app-guid} 
-                b227d46d-4a39-45af-b5f0-ab2091a4e4bf
-                 * 
-                 * 
-                 * */
+                        /*
+                        netsh http add urlacl url=https://+:4443/ user=<your user name>”
 
-                throw;
-            }
+                        netsh http add sslcert ipport=0.0.0.0:4443 certhash=thumbprint appid={app-guid} 
+                        b227d46d-4a39-45af-b5f0-ab2091a4e4bf
+                         * 
+                         * 
+                         * */
+
+                        throw;
+                    }
+                    catch (System.Net.HttpListenerException)
+                    {
+                        if (remainingAttempts > 1)
+                            remainingAttempts--;
+                        else
+                            throw;
+                    }
+
+                    await Task.Delay(5000);
+                }
+            });
+
 
             Log.Info("Your application is running on " + uri);
 
