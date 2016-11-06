@@ -18,7 +18,7 @@
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
+    <UpdateMode>Background</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
@@ -27,7 +27,7 @@
     <InstallUrl>\\Midgard\e\Jonas\Dev\Projects\Home automation\Automaton\Publish\</InstallUrl>
     <ProductName>Automation</ProductName>
     <PublisherName>Jonas Lindmark</PublisherName>
-    <ApplicationRevision>116</ApplicationRevision>
+    <ApplicationRevision>152</ApplicationRevision>
     <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -57,7 +57,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>5DC936E8EB7B65E3AC8A3BA6DBE42B7A50B19EA0</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>C51C1109240867DFB020E2F9DB75BD107887E9AC</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>Automation_1_TemporaryKey.pfx</ManifestKeyFile>
@@ -158,6 +158,7 @@
     <None Include="..\Web\css\Roboto-Regular.ttf">
       <Link>Web\css\Roboto-Regular.ttf</Link>
     </None>
+    <None Include="Automation_1_TemporaryKey.pfx" />
     <None Include="Automation_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
