@@ -144,6 +144,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SystemControlService.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -314,6 +315,9 @@
     </Content>
     <Content Include="..\Web\partials\scene-list.html">
       <Link>Web\partials\scene-list.html</Link>
+    </Content>
+    <Content Include="..\Web\partials\system.html">
+      <Link>Web\partials\system.html</Link>
     </Content>
     <None Include="TODO.txt" />
   </ItemGroup>

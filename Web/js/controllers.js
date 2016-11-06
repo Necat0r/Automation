@@ -242,3 +242,27 @@ automationControllers.controller('sceneController', ['$scope', '$http',
             })
         };
     }]);
+
+automationControllers.controller('systemController', ['$scope', '$http',
+    function ($scope, $http) {
+
+        $http.get('/system/status')
+        .then(function success(response) {
+            console.log(response.data)
+            $scope.status = response.data
+        }, function fail(response) {
+            console.log(response)
+            $scope.status = 'Status retrieval failed';
+        });
+
+        $scope.update = function () {
+            console.log("Updating")
+            $http.put('/system/update', {});
+        };
+
+        $scope.restart = function () {
+            console.log("Restarting")
+            $http.put('system/restart', {});
+        };
+
+    }]);

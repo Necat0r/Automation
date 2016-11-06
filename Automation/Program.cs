@@ -37,6 +37,8 @@ namespace Automation
             if (config.ContainsKey("port"))
                 mPort = UInt16.Parse(config["port"]);
 
+            CreateSystemService();
+
             // Create services
             var serviceConfigs = settings.GetServiceConfigs();
             CreateServices(serviceConfigs);
@@ -84,6 +86,13 @@ namespace Automation
 
                 Log.Info("Created service: {0} of type: {1}", service.Name, service.GetType().ToString());
             }
+        }
+
+        private void CreateSystemService()
+        {
+            ServiceCreationInfo info = new ServiceCreationInfo(null, mServiceManager, mDeviceManager);
+            var service = new SystemControlService(info);
+            mServiceManager.AddService(service);
         }
 
         private void CreateDevices(List<dynamic> configs)

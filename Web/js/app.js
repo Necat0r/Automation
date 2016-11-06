@@ -21,6 +21,10 @@ automationApp.config(['$routeProvider',
             templateUrl: 'partials/scene-list.html',
             controller: 'sceneController'
         }).
+        when('/system', {
+            templateUrl: 'partials/system.html',
+            controller: 'systemController'
+        }).
         otherwise({
             redirectTo: '/devices'
         });
