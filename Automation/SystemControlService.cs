@@ -3,6 +3,7 @@ using Module;
 using System;
 using System.ComponentModel;
 using System.Deployment.Application;
+using System.Threading.Tasks;
 
 namespace Automation
 {
@@ -17,13 +18,11 @@ namespace Automation
 
         private Status mStatus;
 
-        private bool mWorking;
+        private bool mUpdating = false;
 
         public SystemControlService(ServiceCreationInfo info)
         : base("system", info)
         {
-            mWorking = false;
-
             RefreshStatus();
 
             Log.Info("Application is running version: " + mStatus.CurrentVersion);
@@ -69,7 +68,7 @@ namespace Automation
             Log.Debug("ControlService: " + this);
             RefreshStatus();
 
-            if (mWorking)
+            if (mUpdating)
             {
                 Log.Info("Discarding surplus udpate request");
                 return false;
@@ -88,23 +87,27 @@ namespace Automation
                 return false;
             }
 
-            mWorking = true;
+            mUpdating = true;
 
             Log.Info("Update requested");
 
             var deployment = ApplicationDeployment.CurrentDeployment;
 
-            deployment.UpdateCompleted += new AsyncCompletedEventHandler((source, args) => {
-                Log.Info("==============================================================");
-                Log.Info("=========================RESTARTING===========================");
-                Log.Info("==============================================================");
-                System.Windows.Forms.Application.Restart();
-            });
-
             Log.Info("==============================================================");
             Log.Info("==========================UPDATING============================");
             Log.Info("==============================================================");
-            deployment.UpdateAsync();
+            deployment.Update();
+
+            Log.Info("==============================================================");
+            Log.Info("=========================RESTARTING===========================");
+            Log.Info("==============================================================");
+
+            // Run it async so we have a chance to complete the REST call
+            Task.Run(async () =>
+            {
+                await Task.Delay(100);
+                Environment.Exit(0);
+            });
 
             return true;
         }
@@ -112,20 +115,18 @@ namespace Automation
         [ServicePutContract("restart")]
         public void OnRestartRequest()
         {
-            if (mWorking)
-            {
-                Log.Info("Discarding surplus restart request");
-                return;
-            }
-
-            mWorking = true;
-
             Log.Info("Restart requested");
 
             Log.Info("==============================================================");
             Log.Info("=========================RESTARTING===========================");
             Log.Info("==============================================================");
-            System.Windows.Forms.Application.Restart();
+
+            // Run it async so we have a chance to complete the REST call
+            Task.Run(async () =>
+            {
+                await Task.Delay(100);
+                Environment.Exit(0);
+            });
         }
     }
 }
