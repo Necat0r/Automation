@@ -79,17 +79,17 @@ namespace Automation
             mDeviceManager = deviceManager;
             mServiceManager = serviceManager;
 
-            mWake = (WakeOnLanService)serviceManager.GetService(typeof(WakeOnLan.WakeOnLanService));
+            mWake = GetService<WakeOnLanService>();
 
-            mMode = (ModeService)serviceManager.GetService(typeof(ModeService));
+            mMode = GetService<ModeService>();
             if (mMode != null)
                 mMode.OnModeChange += OnModeChange;
 
-            mScene = (SceneService)serviceManager.GetService(typeof(SceneService));
+            mScene = GetService<SceneService>();
             if (mScene != null)
                 mScene.OnSceneEvent += OnSceneEvent;
 
-            mEvents = (EventService)serviceManager.GetService(typeof(EventService));
+            mEvents = GetService<EventService>();
             if (mEvents != null)
                 mEvents.OnEvent += OnExternalEvent;
 
@@ -133,7 +133,7 @@ namespace Automation
             if (mNexus5 != null)
                 mNexus5.OnDeviceEvent += OnBluetoothEvent;
 
-            mSpeech = (SpeechService)serviceManager.GetService(typeof(Speech.SpeechService));
+            mSpeech = GetService<SpeechService>();
             if (mSpeech != null)
             {
                 var commands = new List<DeviceBase.VoiceCommand>();
@@ -550,6 +550,14 @@ namespace Automation
                 if (mMode != null)
                     mMode.CurrentMode = ModeService.Mode.Away;
             }
+        }
+
+        private T GetService<T>() where T : ServiceBase
+        {
+            var service = (T)mServiceManager.GetService(typeof(T));
+            if (service == null)
+                Log.Warning("Missing service: " + typeof(T).ToString());
+            return service;
         }
     }
 }
