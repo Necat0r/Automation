@@ -29,7 +29,10 @@ namespace RfxCom
 
         public NexaSensorDevice(DeviceCreationInfo creationInfo)
         : base(new NexaSensorState(), creationInfo)
-        {}
+        {
+            ((NexaSensorState)mState).Address = int.Parse(creationInfo.Configuration.code);
+            ((NexaSensorState)mState).Unit = int.Parse(creationInfo.Configuration.unit);
+        }
 
         // Called from RfxComService
         public void OnServiceEvent(NexaEvent nexaEvent)
