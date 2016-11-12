@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncEvent.cs" />
     <Compile Include="AsyncLock.cs" />
     <Compile Include="PortNotifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
