@@ -83,6 +83,10 @@
       <Project>{84d44835-8ff1-4a09-a56f-c979313abddb}</Project>
       <Name>ModuleBase</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Support\Support.csproj">
+      <Project>{cb0485c7-9ecc-4545-b704-0c56392ac1ea}</Project>
+      <Name>Support</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -47,6 +47,11 @@ namespace Automation
         private SpeechService mSpeech;
         private EventService mEvents;
 
+        private ModeService.Mode mModeAway = new ModeService.Mode("away");
+        private ModeService.Mode mModeNormal = new ModeService.Mode("normal");
+        private ModeService.Mode mModeNight = new ModeService.Mode("night");
+        private ModeService.Mode mModeOff = new ModeService.Mode("off");
+
         // Livingroom devices
         private CurtainDevice mCurtainLivingroom;
         private EpsonDevice mProjector;
@@ -447,7 +452,7 @@ namespace Automation
             // On
             if (nexaEvent.Value)
             {
-                if (mMode != null && mMode.CurrentMode == ModeService.Mode.Away)
+                if (mMode != null && mMode.CurrentMode == mModeAway)
                 {
                     if (!TimeHelper.IsDay)
                         mLampHallway.SwitchDevice(true);
@@ -486,17 +491,17 @@ namespace Automation
             //}
             //else
             {
-                if (modeEvent.NewMode == ModeService.Mode.Normal)
+                if (modeEvent.NewMode == mModeNormal)
                 {
                     Speak("Activating normal mode");
                     RunMacro("home");
                 }
-                else if (modeEvent.NewMode == ModeService.Mode.Night)
+                else if (modeEvent.NewMode == mModeNight)
                 {
                     Speak("Activating night mode. Sleep tight.");
                     RunMacro("night");
                 }
-                else if (modeEvent.NewMode == ModeService.Mode.Away)
+                else if (modeEvent.NewMode == mModeAway)
                 {
                     Log.Info("Away mode activated");
                     RunMacro("off");
@@ -526,7 +531,7 @@ namespace Automation
             {
                 var currentMode = mMode.CurrentMode;
 
-                bool isAway = currentMode == ModeService.Mode.Away || currentMode == ModeService.Mode.Off;
+                bool isAway = currentMode == mModeAway || currentMode == mModeOff;
                 if (!isAway)
                     return;
 
@@ -534,7 +539,7 @@ namespace Automation
 
                 TimeOfDay tod = TimeHelper.TimeOfDay;
                 if (tod != TimeOfDay.Night)
-                    mMode.CurrentMode = ModeService.Mode.Normal;
+                    mMode.CurrentMode = mModeNormal;
                 //else
                 //    mMode.CurrentMode = ModeService.Mode.Night;
             }
@@ -548,7 +553,7 @@ namespace Automation
             {
                 // Lost device
                 if (mMode != null)
-                    mMode.CurrentMode = ModeService.Mode.Away;
+                    mMode.CurrentMode = mModeAway;
             }
         }
 
