@@ -27,7 +27,7 @@
     <InstallUrl>\\Midgard\e\Jonas\Dev\Projects\Home automation\Automaton\Publish\</InstallUrl>
     <ProductName>Automation</ProductName>
     <PublisherName>Jonas Lindmark</PublisherName>
-    <ApplicationRevision>166</ApplicationRevision>
+    <ApplicationRevision>174</ApplicationRevision>
     <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

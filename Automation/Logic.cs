@@ -30,6 +30,8 @@ namespace Automation
         private const int RECEIVER_SCENE_HTPC = 0;
         private const int RECEIVER_SCENE_DESKTOP = 2;
 
+        private const int MODE_AWAY_TIMEOUT = 30;
+
         private enum SofaSwitch
         {
             None,
@@ -87,6 +89,7 @@ namespace Automation
             mWake = GetService<WakeOnLanService>();
 
             mMode = GetService<ModeService>();
+
             if (mMode != null)
                 mMode.OnModeChange += OnModeChange;
 
@@ -217,6 +220,9 @@ namespace Automation
 
         private void MacroLeaving()
         {
+            if (!TimeHelper.IsDay)
+                mLampHallway.SwitchDevice(true);
+
             mDesktop.SetPower(false);
             mReceiver.SetPower(false);
             if (mProjector != null)
@@ -227,9 +233,6 @@ namespace Automation
             mLampWindow.SwitchDevice(false);
             mLampBedroom.SwitchDevice(false);
             mLampBed.SwitchDevice(false);
-
-            if (!TimeHelper.IsDay)
-                mLampHallway.SwitchDevice(true);
         }
 
         private void MacroHome()
@@ -470,42 +473,49 @@ namespace Automation
             if (nexaEvent.Value)
             {
                 // Up position.
+
+                // Cancel pending changes so we don't reapply away in case down and then up was pressed.
+                if (mMode != null)
+                    mMode.CancelPendingChanges();
                 HomeScene();
             }
             else
             {
                 // Down position.
-                
-                // TODO - Activate pending away mode
+
+                if (mMode != null)
+                {
+                    if (mMode.CurrentMode != mModeAway)
+                    {
+                        Speak(string.Format("Goodbye, activating away mode in {0} seconds", MODE_AWAY_TIMEOUT));
+
+                        RunMacro("leaving");
+                        mMode.QueueChange(mModeAway, MODE_AWAY_TIMEOUT);
+                    }
+                    else
+                    {
+                        Speak("Already away");
+                    }
+                }
             }
         }
 
         private void OnModeChange(object sender, ModeService.ModeEvent modeEvent)
         {
-            // TODO - Enable once pending is re-implemented
-            //if (modeEvent.pending)
-            //{
-            //    if (modeEvent.NewMode == ModeService.Mode.Away)
-            //        // We"re about to leave shut everything off except hallway
-            //        RunMacro("leaving");
-            //}
-            //else
+            if (modeEvent.NewMode == mModeNormal)
             {
-                if (modeEvent.NewMode == mModeNormal)
-                {
-                    Speak("Activating normal mode");
-                    RunMacro("home");
-                }
-                else if (modeEvent.NewMode == mModeNight)
-                {
-                    Speak("Activating night mode. Sleep tight.");
-                    RunMacro("night");
-                }
-                else if (modeEvent.NewMode == mModeAway)
-                {
-                    Log.Info("Away mode activated");
-                    RunMacro("off");
-                }
+                Speak("Activating normal mode");
+                RunMacro("home");
+            }
+            else if (modeEvent.NewMode == mModeNight)
+            {
+                Speak("Activating night mode. Sleep tight.");
+                RunMacro("night");
+            }
+            else if (modeEvent.NewMode == mModeAway)
+            {
+                Log.Info("Away mode activated");
+                RunMacro("off");
             }
         }
 
@@ -535,7 +545,7 @@ namespace Automation
                 if (!isAway)
                     return;
 
-                Speak("Welcome home, Jonas");
+                Speak("Welcome home");
 
                 TimeOfDay tod = TimeHelper.TimeOfDay;
                 if (tod != TimeOfDay.Night)

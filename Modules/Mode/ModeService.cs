@@ -5,13 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Support;
 using System.Linq;
+using Logging;
 
 namespace Mode
 {
-    // TODO - Add pending mode support. For instance activating away mode a few minutes after leaving.
-    // Would this potentially be handled via a separate mode instead? Pending_Away so validation etc can be applied beforehand
-    // to check that windows are closed etc.
-
     public class ModeService : ServiceBase
     {
         public class Mode
@@ -19,13 +16,9 @@ namespace Mode
             public Mode(string name)
             {
                 Name = name;
-                Override = false;
             }
 
             public string Name { get; set; }
-
-            // Override existing states when applied or queued
-            public bool Override { get; set; }
         }
 
         public class ModeEvent : EventArgs
@@ -61,6 +54,7 @@ namespace Mode
         public ModeService(ServiceCreationInfo info)
         : base("mode", info)
         {
+            mCurrentMode = new Mode("<none>");
             mChangeQueue = new List<ModeChange>();
             mQueueEvent = new AsyncEvent();
 
@@ -103,6 +97,15 @@ namespace Mode
             });
         }
 
+        public void CancelPendingChanges()
+        {
+            lock (mChangeQueue)
+            {
+                mChangeQueue.Clear();
+                mQueueEvent.Reset();
+            }
+        }
+
         public Mode CurrentMode
         {
             get { return mCurrentMode; }
@@ -111,6 +114,8 @@ namespace Mode
 
         public void QueueChange(Mode mode, int seconds)
         {
+            Log.Debug("Queuing mode: {0}, timeout: {1}", mode.Name, seconds);
+            
             var activationTime = DateTime.Now + new TimeSpan(0, 0, seconds);
 
             lock (mChangeQueue)
@@ -123,23 +128,19 @@ namespace Mode
 
         private void ChangeMode(Mode mode)
         {
-            if (mode.Override)
+            if (mCurrentMode == mode)
             {
-                lock (mChangeQueue)
-                {
-                    mChangeQueue.Clear();
-                    mQueueEvent.Reset();
-                }
+                Log.Debug("Already in mode: {0}", mode.Name);
+                return;
             }
 
-            if (mCurrentMode != mode)
-            {
-                Mode oldMode = mCurrentMode;
-                mCurrentMode = mode;
+            Log.Debug("Changing mode, old: {0}, new: {1}", mCurrentMode.Name, mode.Name);
 
-                if (OnModeChange != null)
-                    OnModeChange(this, new ModeEvent(mCurrentMode, oldMode));
-            }
+            Mode oldMode = mCurrentMode;
+            mCurrentMode = mode;
+
+            if (OnModeChange != null)
+                OnModeChange(this, new ModeEvent(mCurrentMode, oldMode));
         }
     }
 }
