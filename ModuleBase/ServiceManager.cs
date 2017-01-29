@@ -55,8 +55,5 @@ namespace Module
         {
             get { return mServices; }
         }
-
-        // TODO - Add some sort of key + ability to unregister services so we can update .dll:s in runtime
-        // without restarting the application
     }
 }

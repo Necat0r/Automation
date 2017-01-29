@@ -93,10 +93,6 @@ namespace Epson
         private SerialHelper mSerialHelper;
         private SerialHelper.Buffer mBuffer = new SerialHelper.Buffer();
 
-        //private bool mPoweredOn = false;
-        //private InputSource mSource = InputSource.Unknown;
-        //private int mLampHours;
-
         private CommandInfo mRunningCommand;
         private object mCommandLock = new object();
         private List<CommandInfo> mCommandQueue = new List<CommandInfo>();

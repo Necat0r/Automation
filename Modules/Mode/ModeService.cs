@@ -115,11 +115,11 @@ namespace Mode
         public void QueueChange(Mode mode, int seconds)
         {
             Log.Debug("Queuing mode: {0}, timeout: {1}", mode.Name, seconds);
-            
+
             var activationTime = DateTime.Now + new TimeSpan(0, 0, seconds);
 
             lock (mChangeQueue)
-            {    
+            {
                 mChangeQueue.Add(new ModeChange(mode, activationTime));
                 mChangeQueue.OrderBy(x => x.ActivationTime);
                 mQueueEvent.Set();
