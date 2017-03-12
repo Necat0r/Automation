@@ -107,7 +107,8 @@ namespace Bluetooth
             // Refresh available devices
             mBluetooth.RefreshDevices();
             mDeviceNames = mBluetooth.GetDevices();
-            Log.Info("Bluetooth devices: {0}", mDeviceNames);
+            if (mDeviceNames != null)
+                Log.Info("Bluetooth devices: {0}", mDeviceNames);
 
             // Set up scan thread.
             mEvents = new EventWaitHandle[] { mStopEvent, mDeviceEvent };

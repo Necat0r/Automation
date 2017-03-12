@@ -1,7 +1,6 @@
 ﻿using Logging;
 using Module;
 using System;
-using System.ComponentModel;
 using System.Deployment.Application;
 using System.Threading.Tasks;
 

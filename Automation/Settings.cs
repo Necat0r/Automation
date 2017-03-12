@@ -94,7 +94,7 @@ namespace Automation
                         list.Add(LoadSettingsObject(subchild));
                     settings[name] = list;
                 }
-                else if (hasGrandChildren || child.Attributes.Count > 0)
+                else if (hasGrandChildren || (child.Attributes != null && child.Attributes.Count > 0))
                 {
                     // Treat this as a sub-object & recursively process it.
                     settings[name] = LoadSettingsObject(child);
