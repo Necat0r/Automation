@@ -1,6 +1,6 @@
+#pragma once
 
-
-#if defined(AUTOMATION_BUILD)
+#if defined(SUPPORTDLL_EXPORTS)
 #define AUTOMATION_API __declspec(dllexport)
 #else
 #define AUTOMATION_API __declspec(dllimport)

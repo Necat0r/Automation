@@ -277,10 +277,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\SupportDll\x64\Release\SupportDll.dll">
-      <Link>SupportDll.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Web\css\app.css">
       <Link>Web\css\app.css</Link>
     </Content>
@@ -319,6 +315,10 @@
     </Content>
     <Content Include="..\Web\partials\system.html">
       <Link>Web\partials\system.html</Link>
+    </Content>
+    <Content Include="..\SupportDll\x64\Release\SupportDll.dll">
+      <Link>SupportDll.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="TODO.txt" />
   </ItemGroup>
