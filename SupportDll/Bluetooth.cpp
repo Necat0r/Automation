@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <assert.h>
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <winsock2.h>
 #include <ws2bth.h>
 
