@@ -79,7 +79,7 @@ namespace Automation
         private NexaSensorDevice mSwitchHallway;
 
         // Presence devices
-        private BluetoothDevice mNexus5;
+        private BluetoothDevice mGalaxyS7;
 
         public Logic(DeviceManager deviceManager, ServiceManager serviceManager)
         {
@@ -137,9 +137,9 @@ namespace Automation
                 mSwitchHallway.OnDeviceEvent += OnHallwaySwitch;
 
             // Presence devices
-            mNexus5 = (BluetoothDevice)deviceManager.GetDevice("presence_nexus_5");
-            if (mNexus5 != null)
-                mNexus5.OnDeviceEvent += OnBluetoothEvent;
+            mGalaxyS7 = (BluetoothDevice)deviceManager.GetDevice("presence_s7");
+            if (mGalaxyS7 != null)
+                mGalaxyS7.OnDeviceEvent += OnBluetoothEvent;
 
             mSpeech = GetService<SpeechService>();
             if (mSpeech != null)
@@ -460,8 +460,8 @@ namespace Automation
                     if (!TimeHelper.IsDay)
                         mLampHallway.SwitchDevice(true);
 
-                    if (mNexus5 != null)
-                        mNexus5.CheckDevice();      // Trigger scan
+                    if (mGalaxyS7 != null)
+                        mGalaxyS7.CheckDevice();      // Trigger scan
                 }
             }
         }
@@ -528,6 +528,7 @@ namespace Automation
         {
             if (externalEvent.Name == "phoneInRange")
             {
+                Log.Debug("phoneInRange event");
                 string id;
                 bool result = externalEvent.Data.TryGetValue("Id", out id);
                 if (result)
@@ -537,13 +538,16 @@ namespace Automation
 
         private void HomeScene()
         {
+            Log.Debug("HomeScene()");
             if (mMode != null)
             {
                 var currentMode = mMode.CurrentMode;
 
                 bool isAway = currentMode == mModeAway || currentMode == mModeOff;
                 if (!isAway)
+                {
                     return;
+                }
 
                 Speak("Welcome home");
 
