@@ -46,12 +46,14 @@ namespace Bluetooth
             state.BtName = creationInfo.Configuration.btname;
 
             mService = (BluetoothService)creationInfo.ServiceManager.GetService(typeof(BluetoothService));
-            mService.AddDevice(this);
+            if (mService != null)
+                mService.AddDevice(this);
         }
 
         ~BluetoothDevice()
         {
-            mService.RemoveDevice(this);
+            if (mService != null)
+                mService.RemoveDevice(this);
         }
 
         public string BtName
