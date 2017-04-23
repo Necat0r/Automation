@@ -88,7 +88,8 @@ namespace Bluetooth
 
         public void CheckDevice()
         {
-            mService.ForceDeviceUpdate(this);
+            if (mService != null)
+                mService.ForceDeviceUpdate(this);
         }
     }
 }
