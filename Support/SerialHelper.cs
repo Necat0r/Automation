@@ -248,18 +248,20 @@ namespace Support
                 }
 
                 // Wait and try again in case there's nothing to read.
-                if (mSerial.BytesToRead == 0)
-                {
-                    mStopEvent.WaitOne(100);
-                    continue;
-                }
-
                 int bytesRead = 0;
-                var data = new byte[mSerial.BytesToRead];
+                byte[] data = null;
 
                 try
                 {
-                    bytesRead = mSerial.Read(data, 0, mSerial.BytesToRead);
+                    int bytesToRead = mSerial.BytesToRead;
+                    if (bytesToRead == 0)
+                    {
+                        EventWaitHandle.WaitAny(mEvents, 100);
+                        continue;
+                    }
+
+                    data = new byte[bytesToRead];
+                    bytesRead = mSerial.Read(data, 0, bytesToRead);
                 }
                 catch (Exception e)
                 {
