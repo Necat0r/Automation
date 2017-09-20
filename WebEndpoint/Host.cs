@@ -44,6 +44,8 @@
                         // netsh http add urlacl url=http://+:<port>/automation/ user=<machine>\<user>
                         Log.Fatal("Probably an ACL issue.\nRun the following in an elevated command prompt:\nnetsh http add urlacl url=http://+:" + port + "/ user=<machine>\\<user>");
 
+                        // ALSO Disable Firewall
+
                         /*
                         netsh http add urlacl url=https://+:4443/ user=<your user name>”
 
@@ -55,12 +57,15 @@
 
                         throw;
                     }
-                    catch (System.Net.HttpListenerException)
+                    catch (System.Net.HttpListenerException e)
                     {
                         if (remainingAttempts > 1)
                             remainingAttempts--;
                         else
+                        {
+                            Log.Fatal("Failed initializing web endpoint. " + e.Message);
                             throw;
+                        }
                     }
 
                     await Task.Delay(5000);
