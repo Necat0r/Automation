@@ -36,13 +36,13 @@ namespace Automation
             bool networkDeployed = ApplicationDeployment.IsNetworkDeployed;
             if (networkDeployed)
             {
-                ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
-
-                mStatus.CurrentVersion = ad.CurrentVersion.ToString();
-                mStatus.AvailableVersion = mStatus.CurrentVersion;
-
                 try
                 {
+                    ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
+
+                    mStatus.CurrentVersion = ad.CurrentVersion.ToString();
+                    mStatus.AvailableVersion = mStatus.CurrentVersion;
+
                     UpdateCheckInfo updateInfo = ad.CheckForDetailedUpdate();
                     mStatus.AvailableVersion = updateInfo.AvailableVersion.ToString();
 
