@@ -14,7 +14,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
-    <PublishUrl>E:\Jonas\Dev\Projects\Home automation\Automaton\Publish\</PublishUrl>
+    <PublishUrl>C:\Jonas\Dev\Projects\Home automation\Automaton\Publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -24,10 +24,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>\\Midgard\e\Jonas\Dev\Projects\Home automation\Automaton\Publish\</InstallUrl>
+    <InstallUrl>\\Midgard\c\Jonas\Dev\Projects\Home automation\Automaton\Publish\</InstallUrl>
     <ProductName>Automation</ProductName>
     <PublisherName>Jonas Lindmark</PublisherName>
-    <ApplicationRevision>174</ApplicationRevision>
+    <ApplicationRevision>179</ApplicationRevision>
     <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -319,6 +319,10 @@
     <Content Include="..\SupportDll\x64\Release\SupportDll.dll">
       <Link>SupportDll.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="C:\Users\Jonas\Documents\Automation\settings.xml">
+      <Link>settings.xml</Link>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="TODO.txt" />
   </ItemGroup>
