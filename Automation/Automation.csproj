@@ -57,10 +57,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>C51C1109240867DFB020E2F9DB75BD107887E9AC</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>C6606E18B7218ED934D594D674474CA50B372660</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Automation_1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Automation_2_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -159,6 +159,7 @@
       <Link>Web\css\Roboto-Regular.ttf</Link>
     </None>
     <None Include="Automation_1_TemporaryKey.pfx" />
+    <None Include="Automation_2_TemporaryKey.pfx" />
     <None Include="Automation_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
