@@ -12,6 +12,7 @@ namespace Automation
         {
             public string CurrentVersion { get; set; }
             public string AvailableVersion { get; set; }
+            public bool NetworkDeployed { get; set; }
             public bool UpdateAvailable { get; set; }
         }
 
@@ -33,10 +34,10 @@ namespace Automation
         {
             mStatus = new Status();
 
-            bool networkDeployed = ApplicationDeployment.IsNetworkDeployed;
-            if (networkDeployed)
+            try
             {
-                try
+                mStatus.NetworkDeployed = ApplicationDeployment.IsNetworkDeployed;
+                if (mStatus.NetworkDeployed)
                 {
                     ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
 
@@ -48,9 +49,9 @@ namespace Automation
 
                     mStatus.UpdateAvailable = updateInfo.UpdateAvailable;
                 }
-                catch (InvalidOperationException)
-                { }
             }
+            catch (InvalidOperationException)
+            { }
         }
 
         [ServiceGetContractAttribute("status")]
@@ -79,8 +80,7 @@ namespace Automation
                 return false;
             }
 
-            bool networkDeployed = ApplicationDeployment.IsNetworkDeployed;
-            if (!networkDeployed)
+            if (!mStatus.NetworkDeployed)
             {
                 Log.Info("The application is not network deployed");
                 return false;
