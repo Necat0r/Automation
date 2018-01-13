@@ -302,6 +302,15 @@
     <Content Include="..\Web\js\controllers.js">
       <Link>Web\js\controllers.js</Link>
     </Content>
+    <Content Include="..\Web\js\libs\angularjs\1.3.0-beta.13\angular-route.js">
+      <Link>Web\js\libs\angularjs\1.3.0-beta.13\angular-route.js</Link>
+    </Content>
+    <Content Include="..\Web\js\libs\angularjs\1.3.0-beta.13\angular.js">
+      <Link>Web\js\libs\angularjs\1.3.0-beta.13\angular.js</Link>
+    </Content>
+    <Content Include="..\Web\js\libs\jquery-1.10.2.js">
+      <Link>Web\js\libs\jquery-1.10.2.js</Link>
+    </Content>
     <Content Include="..\Web\js\services.js">
       <Link>Web\js\services.js</Link>
     </Content>
